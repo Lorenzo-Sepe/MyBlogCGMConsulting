@@ -11,30 +11,29 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class TagService {
+
     private final TagRepository tagRepository;
 
-    public Tag create(String id) {
+    public Tag create(String id){
         Optional<Tag> tag = tagRepository.findById(id);
-        if(tag.isEmpty()) {
+        if(tag.isEmpty())
             return tagRepository.save(new Tag(id));
-        }
-       throw new ConflictException(Msg.TAG_ALREADY_PRESENT);
+        throw new ConflictException(Msg.TAG_ALREADY_PRESENT);
     }
 
-    public Tag switchVisibility(String id){
+    public Tag switchVisibility(String id) {
         Tag tag = tagRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Tag","id",id));
-
+                .orElseThrow(() -> new ResourceNotFoundException("Tag", "id", id));
         tag.setVisible(!tag.isVisible());
         return tagRepository.save(tag);
     }
 
-    public List<TagResponse> getTags(){
+    public List<TagResponse> getTags() {
         return tagRepository.getAll();
     }
 }
-

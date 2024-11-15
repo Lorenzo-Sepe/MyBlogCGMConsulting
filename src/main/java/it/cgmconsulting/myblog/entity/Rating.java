@@ -7,12 +7,14 @@ import lombok.*;
 import org.hibernate.annotations.Check;
 
 @Entity
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Rating extends CreationUpdate {
+
     @EmbeddedId
     @EqualsAndHashCode.Include
     private RatingId ratingId;
 
-    @Check(constraints = "rate > 0 AND rate < 6") // Check -> vincolo sul db per cui è impossibile inserire valori al di fuori del range
-    private byte rate; // espresso in stelle da 1 a 5
+    @Check(constraints = "rate > 0 AND rate < 6") // Check -> vincolo sul db per cui è impossibile inserire valori al di fuori del range specificato
+    private byte rate; // espresso in stelline da 1 a 5
 }

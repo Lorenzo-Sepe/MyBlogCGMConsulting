@@ -3,13 +3,15 @@ package it.cgmconsulting.myblog.entity;
 import it.cgmconsulting.myblog.entity.common.CreationUpdate;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Post extends CreationUpdate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -26,16 +28,16 @@ public class Post extends CreationUpdate {
 
     private String image; // nome file + estensione
 
-    private LocalDateTime publishedAt;
+    private LocalDate publishedAt;
 
     @ManyToOne
     @JoinColumn(nullable = false)
     private User user;
 
     @ManyToMany
-    @JoinTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"),
+    @JoinTable(name = "post_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private Set<Tag> tags = new HashSet<>();
-
 }

@@ -5,20 +5,18 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record SignUpRequest (
-    @NotBlank(message = "The Username must not be null or blank")
-    @Size(max=30,min=3,message = "The Username must be between 3 and 30 characters")
-     String username,
+public record SignUpRequest(
 
-    @Email
-    @NotBlank(message = "The email must not be null or blank")
-    String email,
-
-    @NotBlank(message = "The password must not be null or blank")
-    @Size(max=16,min=8,message = "The password must be between 6 and 30 characters")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[\\d])(?=.*[@#$%£^&!?+-]).*$",
-            message = "The password must contain at least one uppercase letter, one lowercase letter, one number and one special character")
-    String password
-){
-
+        @NotBlank(message = "Username cannot be null or blank")
+        @Size(max = 20, min = 3, message = "Username must be between 3 and 20 characters")
+        String username,
+        @NotBlank(message = "Email cannot be null or blank")
+        @Email(message = "Email not well-formed")
+        String email,
+        @NotBlank(message = "Password cannot be null or blank")
+        @Size(min = 8, max = 16, message = "Password must be between 8 and 16 characters")
+        @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$£%^&+=!]).*$",
+                message = "Password must contain at least one digit, one lowercase, one uppercase letter and one special character")
+        String password
+) {
 }

@@ -8,6 +8,7 @@ import lombok.*;
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Authority extends CreationUpdate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -17,7 +18,9 @@ public class Authority extends CreationUpdate {
     @Column(unique = true, length = 9, nullable = false)
     private AuthorityName authorityName;
 
-    private boolean isDefaultAuthority;
+    private boolean defaultAuthority;
 
-    private boolean isVisible; // di default true
+    private boolean visible; // di default true
+
+
 }

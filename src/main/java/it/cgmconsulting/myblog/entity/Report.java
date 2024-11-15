@@ -20,10 +20,10 @@ public class Report extends CreationUpdate {
     @ManyToOne
     private MadeByYou madeByYou;
 
-    private int counter;
+    private int counter; // contatore di segnalazioni
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 18)
     private ReportStatus status;
 
     @ManyToOne
@@ -32,5 +32,6 @@ public class Report extends CreationUpdate {
             @JoinColumn(name="start_date")
     })
     private ReportReason reportReason;
+
 
 }

@@ -7,6 +7,7 @@ import lombok.*;
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Avatar extends CreationUpdate {
+
     @Id
     @EqualsAndHashCode.Include
     private int id;
@@ -17,12 +18,13 @@ public class Avatar extends CreationUpdate {
     private User user;
 
     @Column(nullable = false)
-    private String fileName;
+    private String filename;
 
     @Column(nullable = false)
-    private String fileType; // mime type
+    private String filetype; // mime type
 
     @Lob
     @Column(nullable = false, columnDefinition = "BLOB")
     private byte[] data;
+
 }

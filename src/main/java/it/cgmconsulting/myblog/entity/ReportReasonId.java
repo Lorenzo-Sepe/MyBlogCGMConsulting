@@ -1,16 +1,14 @@
 package it.cgmconsulting.myblog.entity;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
 @Embeddable
-@Getter @Setter @AllArgsConstructor @NoArgsConstructor
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor @EqualsAndHashCode @Builder
 public class ReportReasonId implements Serializable {
 
     @Column(nullable = false, length = 30)

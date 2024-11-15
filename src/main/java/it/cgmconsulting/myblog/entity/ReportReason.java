@@ -1,19 +1,21 @@
 package it.cgmconsulting.myblog.entity;
 
-import it.cgmconsulting.myblog.entity.common.CreationUpdate;
-import jakarta.persistence.*;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
 import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
-public class ReportReason extends CreationUpdate {
+@Getter @Setter @Builder @AllArgsConstructor @NoArgsConstructor @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class ReportReason {
+
     @EmbeddedId
     @EqualsAndHashCode.Include
     private ReportReasonId reportReasonId;
 
-    private LocalDate endDate = LocalDate.MAX;
+    private LocalDate endDate;
 
     private int severity;
+
 }

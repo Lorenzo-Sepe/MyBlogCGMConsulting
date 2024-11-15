@@ -7,6 +7,7 @@ import lombok.*;
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Comment extends CreationUpdate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -21,11 +22,11 @@ public class Comment extends CreationUpdate {
     private Post post;
 
     @Column(nullable = false)
-    private String content;
+    private String comment;
 
     private boolean censored;
 
     @ManyToOne
-    @JoinColumn(nullable = true)
     private Comment parent;
+
 }
