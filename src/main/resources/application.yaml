@@ -58,5 +58,12 @@ logging:
     org.springframework: info
     org.hibernate.orm.jdbc.bind: trace
 
+# CUSTOM PROPERTIES JWT
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}
+      # 4 ORE
+      expiration: 14400000
 
 

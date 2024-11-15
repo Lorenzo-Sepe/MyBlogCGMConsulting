@@ -3,25 +3,39 @@ package it.cgmconsulting.myblog.service;
 import it.cgmconsulting.myblog.entity.Authority;
 import it.cgmconsulting.myblog.entity.User;
 import it.cgmconsulting.myblog.entity.enumeration.AuthorityName;
+import it.cgmconsulting.myblog.exception.BadCredentialsException;
 import it.cgmconsulting.myblog.exception.ConflictException;
+import it.cgmconsulting.myblog.exception.DisabledException;
 import it.cgmconsulting.myblog.exception.ResourceNotFoundException;
+import it.cgmconsulting.myblog.payload.request.SignInRequest;
 import it.cgmconsulting.myblog.payload.request.SignUpRequest;
+import it.cgmconsulting.myblog.payload.response.JwtAuthenticationResponse;
 import it.cgmconsulting.myblog.repository.AuthorityRepository;
 import it.cgmconsulting.myblog.repository.UserRepository;
 import it.cgmconsulting.myblog.utils.GenericMail;
 import it.cgmconsulting.myblog.utils.Msg;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
+    private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final AuthorityRepository authorityRepository;
     private final EmailService emailService;
+    private final JwtService jwtService;
 
     public String signup(SignUpRequest request){
         if(userRepository.existsByUsernameOrEmail(request.username(), request.email()))
@@ -49,9 +63,38 @@ public class AuthService {
         // abilito lo user e gli cambio il ruolo da quello di default a MEMBER; e resetto il confirmCode
         user.setEnabled(true);
         user.setConfirmCode(null);
-        user.setAuthority(authorityRepository.findByAuthorityNameAndVisibleTrue(AuthorityName.MEMBER)
-                .orElseThrow(()-> new ResourceNotFoundException("Authority", "name", AuthorityName.MEMBER.name())));
+        user.setAuthority(authorityRepository.findByAuthorityNameAndVisibleTrue(AuthorityName.ROLE_MEMBER)
+                .orElseThrow(()-> new ResourceNotFoundException("Authority", "name", AuthorityName.ROLE_MEMBER.name())));
         userRepository.save(user);
         return Msg.USER_SIGNUP_SECOND_STEP;
+    }
+
+
+
+    public JwtAuthenticationResponse signin(SignInRequest request) {
+        User user = userRepository.findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username or email", request.usernameOrEmail()));
+
+        if (!user.isEnabled()) {
+            Authority authority = authorityRepository.findByDefaultAuthorityTrueAndVisibleTrue()
+                    .orElseThrow(() -> new ResourceNotFoundException("Authority", "defaultAuthority", true));
+             if(authority.getAuthorityName().name().equals(user.getAuthority().getAuthorityName().name()))
+                 throw new DisabledException("Account non attivato. Controllare le tue emails per il link di validazione");
+            throw new DisabledException("Account disabilitato. Contattare l'amministratore");
+        }
+
+        if(!passwordEncoder.matches(request.password(), user.getPassword()))
+            throw new BadCredentialsException("Credenziali non valide");
+
+        String authority = user.getAuthority().getAuthorityName().name();
+
+        String jwt = jwtService.generateToken(user);
+        return JwtAuthenticationResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .authority(authority)
+                .token(jwt)
+                .build();
     }
 }

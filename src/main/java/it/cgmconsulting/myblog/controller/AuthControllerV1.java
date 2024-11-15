@@ -1,6 +1,8 @@
 package it.cgmconsulting.myblog.controller;
 
+import it.cgmconsulting.myblog.payload.request.SignInRequest;
 import it.cgmconsulting.myblog.payload.request.SignUpRequest;
+import it.cgmconsulting.myblog.payload.response.JwtAuthenticationResponse;
 import it.cgmconsulting.myblog.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,11 @@ public class AuthControllerV1 {
     @PatchMapping("/confirm/{confirmCode}")
     public ResponseEntity<String> verifyEmail(@PathVariable String confirmCode){
         return ResponseEntity.ok(authService.verifyEmail(confirmCode));
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<JwtAuthenticationResponse>signin(@RequestBody @Valid SignInRequest request) {
+        return ResponseEntity.ok(authService.signin(request));
     }
 
 }
