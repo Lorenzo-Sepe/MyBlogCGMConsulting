@@ -17,4 +17,9 @@ public class Msg {
 
     public final static String ACCESS_DENIED = "YOU ARE NOT AUTHORIZED TO PERMORM THIS ACTION";
 
+    public final static String PASSWORD_MISMATCH = "The repeated password not match";
+    public final static String PWD_CHANGED = "Password successfully updated";
+    public final static String PWD_INCORRECT = "Wrong Password";
+
+
 }
