@@ -18,6 +18,14 @@ public interface TagRepository extends JpaRepository<Tag, String> {
             "t.id, " +
             "t.visible" +
             ") FROM Tag t " +
+            "WHERE t.visible = :visible " +
+            "ORDER BY t.id")
+    List<TagResponse> getAll(boolean visible);
+
+    @Query(value="SELECT new it.cgmconsulting.myblog.payload.response.TagResponse(" +
+            "t.id, " +
+            "t.visible" +
+            ") FROM Tag t " +
             "ORDER BY t.id")
     List<TagResponse> getAll(); // SELECT t.id, t.visible FROM tag t ORDER BY t.id
 }

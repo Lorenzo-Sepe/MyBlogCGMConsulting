@@ -51,34 +51,28 @@ public class User extends CreationUpdate implements UserDetails {
     )
     private Set<Post> preferredPosts = new HashSet<>();
 
-
-    /**
-     * @return
-     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(authority.getAuthorityName().name()));
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
     @Override
     public boolean isEnabled() {
         return enabled;
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
     }
 }

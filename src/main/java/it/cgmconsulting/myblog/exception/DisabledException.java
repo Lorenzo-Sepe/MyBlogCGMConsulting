@@ -1,13 +1,13 @@
 package it.cgmconsulting.myblog.exception;
 
+import lombok.Data;
 import lombok.Getter;
 
 @Getter
-public class DisabledException extends RuntimeException {
+public class DisabledException extends RuntimeException{
 
-    private String messageError;
-
-    public DisabledException(String messageError) {
+    private final String messageError;
+    public DisabledException(String messageError){
         this.messageError = messageError;
     }
 }

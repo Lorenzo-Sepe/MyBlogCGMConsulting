@@ -1,8 +1,10 @@
 package it.cgmconsulting.myblog.exception;
 
+import it.cgmconsulting.myblog.utils.Msg;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,6 +24,21 @@ public class ExceptionManagement {
     @ExceptionHandler({ResourceNotFoundException.class})
     public ResponseEntity<String> resourceNotFoundExceptionManagement(ResourceNotFoundException ex){
         return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({DisabledException.class})
+    public ResponseEntity<String> disabledExceptionManagement(DisabledException ex){
+        return new ResponseEntity<String>(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity<String> disabledExceptionManagement(AccessDeniedException ex){
+        return new ResponseEntity<String>(Msg.ACCESS_DENIED, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler({BadCredentialsException.class})
+    public ResponseEntity<String> badCredentialsExceptionManagement(BadCredentialsException ex){
+        return new ResponseEntity<String>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
     // Per la gestione delle eccezioni sollevate dalle annotazioni di validazione con @Validated
@@ -44,15 +61,5 @@ public class ExceptionManagement {
         ex.getBindingResult().getFieldErrors()
                 .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(DisabledException.class)
-    public ResponseEntity<String> handleDisabledException(DisabledException ex) {
-        return new ResponseEntity<>(ex.getMessageError(), HttpStatus.FORBIDDEN);
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<String> handleBadCredentialsException(BadCredentialsException ex) {
-        return new ResponseEntity<>(ex.getMessageError(), HttpStatus.FORBIDDEN);
     }
 }

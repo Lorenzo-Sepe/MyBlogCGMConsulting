@@ -10,7 +10,7 @@ server:
     enabled: true
     min-response-size: 2KB
 
-# SPRING BOOT + DATABASE
+# SPRING BOOT + DATABASE + MAIL
 spring:
   application:
     name: myblog
@@ -55,15 +55,19 @@ spring:
 logging:
   level:
     it.cgmconsulting: info
-    org.springframework: info
+    org:
+      springframework:
+        boot: info
+        security: debug
     org.hibernate.orm.jdbc.bind: trace
 
-# CUSTOM PROPERTIES JWT
+# CUSTOM PROPERTIES
 application:
   security:
     jwt:
       secret-key: ${JWT_SECRET_KEY}
-      # 4 ORE
+      # 4 ORE in millisecondi
       expiration: 14400000
+
 
 

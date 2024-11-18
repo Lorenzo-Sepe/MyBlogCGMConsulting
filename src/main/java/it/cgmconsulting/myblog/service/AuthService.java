@@ -15,7 +15,7 @@ import it.cgmconsulting.myblog.repository.UserRepository;
 import it.cgmconsulting.myblog.utils.GenericMail;
 import it.cgmconsulting.myblog.utils.Msg;
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +23,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -30,11 +31,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final AuthorityRepository authorityRepository;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
     public String signup(SignUpRequest request){
@@ -45,7 +45,7 @@ public class AuthService {
         User user = User.builder()
                 .username(request.username())
                 .email(request.email())
-                .password(request.password())
+                .password(passwordEncoder.encode(request.password()))
                 .enabled(false)
                 .authority(authority)
                 .confirmCode(UUID.randomUUID().toString())
@@ -63,32 +63,28 @@ public class AuthService {
         // abilito lo user e gli cambio il ruolo da quello di default a MEMBER; e resetto il confirmCode
         user.setEnabled(true);
         user.setConfirmCode(null);
-        user.setAuthority(authorityRepository.findByAuthorityNameAndVisibleTrue(AuthorityName.ROLE_MEMBER)
-                .orElseThrow(()-> new ResourceNotFoundException("Authority", "name", AuthorityName.ROLE_MEMBER.name())));
+        user.setAuthority(authorityRepository.findByAuthorityNameAndVisibleTrue(AuthorityName.MEMBER)
+                .orElseThrow(()-> new ResourceNotFoundException("Authority", "name", AuthorityName.MEMBER.name())));
         userRepository.save(user);
         return Msg.USER_SIGNUP_SECOND_STEP;
     }
 
-
-
     public JwtAuthenticationResponse signin(SignInRequest request) {
         User user = userRepository.findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username or email", request.usernameOrEmail()));
-
-        if (!user.isEnabled()) {
+        if(!user.isEnabled()) {
             Authority authority = authorityRepository.findByDefaultAuthorityTrueAndVisibleTrue()
                     .orElseThrow(() -> new ResourceNotFoundException("Authority", "defaultAuthority", true));
-             if(authority.getAuthorityName().name().equals(user.getAuthority().getAuthorityName().name()))
-                 throw new DisabledException("Account non attivato. Controllare le tue emails per il link di validazione");
-            throw new DisabledException("Account disabilitato. Contattare l'amministratore");
+            if (authority.getAuthorityName().name().equals(user.getAuthority().getAuthorityName().name()))
+                throw new DisabledException("Please check your email to activate your account");
+            throw new DisabledException("You are banned");
         }
-
         if(!passwordEncoder.matches(request.password(), user.getPassword()))
-            throw new BadCredentialsException("Credenziali non valide");
+            throw new BadCredentialsException("Bad credentials");
 
         String authority = user.getAuthority().getAuthorityName().name();
-
         String jwt = jwtService.generateToken(user);
+
         return JwtAuthenticationResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
@@ -96,5 +92,26 @@ public class AuthService {
                 .authority(authority)
                 .token(jwt)
                 .build();
+    }
+
+    public String modifyUserAuthority(int id, String auth) {
+        // trovare l'utente
+        User user = userRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("User", "id", id));
+        // verificare che il ruolo dell'utente non sia quello di default
+        if(user.getAuthority().isDefaultAuthority())
+            throw new ConflictException(Msg.USER_HAS_DEFAULT_AUTHORITY);
+        try{
+            Authority authority = authorityRepository.findByAuthorityNameAndVisibleTrue(AuthorityName.valueOf(auth.toUpperCase()))
+                    .orElseThrow(()-> new ResourceNotFoundException("Authority", "name", auth));
+            if(user.getAuthority().equals(authority))
+                throw new ConflictException(Msg.USER_HAS_SAME_AUTHORITY);
+            user.setAuthority(authority);
+        } catch (IllegalArgumentException ex){
+            return Msg.INVALID_AUTHORITY;
+        }
+        // salvare
+        userRepository.save(user);
+        return Msg.AUTHORITY_CHANGED;
     }
 }

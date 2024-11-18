@@ -1,12 +1,15 @@
 package it.cgmconsulting.myblog.service;
 
 import it.cgmconsulting.myblog.entity.Tag;
+import it.cgmconsulting.myblog.entity.User;
+import it.cgmconsulting.myblog.entity.enumeration.AuthorityName;
 import it.cgmconsulting.myblog.exception.ConflictException;
 import it.cgmconsulting.myblog.exception.ResourceNotFoundException;
 import it.cgmconsulting.myblog.payload.response.TagResponse;
 import it.cgmconsulting.myblog.repository.TagRepository;
 import it.cgmconsulting.myblog.utils.Msg;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +36,9 @@ public class TagService {
         return tagRepository.save(tag);
     }
 
-    public List<TagResponse> getTags() {
+    public List<TagResponse> getTags(Optional<Boolean> visible) {
+        if(visible.isPresent())
+            return tagRepository.getAll(visible.get());
         return tagRepository.getAll();
     }
 }

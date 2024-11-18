@@ -46,7 +46,7 @@ public class JwtService {
     }
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
+        return Jwts.builder().setClaims(extraClaims)
                 .setIssuer(issuer) // Identifica chi ha emesso il token
                 .setSubject(userDetails.getUsername()) // Identifica il soggetto del JWT
                 .setIssuedAt(new Date(System.currentTimeMillis())) //Data-Ora creazione del JWT

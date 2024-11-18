@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Data @AllArgsConstructor @NoArgsConstructor @Builder
 public class JwtAuthenticationResponse {
-    private Integer id;
+
+    private int id;
     private String username;
     private String email;
     private String authority;
