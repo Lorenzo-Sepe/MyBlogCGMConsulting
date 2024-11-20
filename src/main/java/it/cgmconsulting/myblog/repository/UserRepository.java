@@ -12,6 +12,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     boolean existsByUsernameOrEmail(String username, String email);
 
+    boolean existsByUsernameAndIdNot(String username, int id);
+
+    boolean existsByEmailAndIdNot(String email, int id);
+
     Optional<User> findByConfirmCode(String confirmCode);
 
     Optional<User> findByUsernameOrEmail(String username, String email);
@@ -19,6 +23,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByUsername(String username);
 
     @Modifying
-    @Query(value="UPDATE _user SET password = :password WHERE id = :id", nativeQuery = true)
+    @Query(value="UPDATE user SET password = :password WHERE id = :id", nativeQuery = true)
     void updatePassword(String password, int id);
+
+
 }

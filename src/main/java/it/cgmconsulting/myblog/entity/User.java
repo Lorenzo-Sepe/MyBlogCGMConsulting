@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
-@Table(name = "_user")
+@Table(name = "user")
 public class User extends CreationUpdate implements UserDetails {
 
     @Id

@@ -69,5 +69,11 @@ application:
       # 4 ORE in millisecondi
       expiration: 14400000
 
+image:
+  avatar:
+    size: 5120 #dimensione dell'immagine in bite 5Kbyte
+    width: 512 #larghezza in pixel
+    height: 512 #altezza in pixel
+    extensions: jpg,jpeg,gif,png #estensione dell'immagine
 
 

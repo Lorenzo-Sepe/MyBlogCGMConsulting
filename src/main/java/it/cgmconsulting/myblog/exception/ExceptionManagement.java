@@ -41,6 +41,11 @@ public class ExceptionManagement {
         return new ResponseEntity<String>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler({BadRequestException.class})
+    public ResponseEntity<String> badRequestExceptionManagement(BadRequestException ex){
+        return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     // Per la gestione delle eccezioni sollevate dalle annotazioni di validazione con @Validated
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<Map<String, String>> constraintViolationExceptionManagement(ConstraintViolationException ex) {
