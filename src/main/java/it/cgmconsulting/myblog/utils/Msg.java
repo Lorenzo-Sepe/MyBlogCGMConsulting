@@ -16,7 +16,7 @@ public class Msg {
     public final static String INVALID_AUTHORITY = "Invalid authority name";
 
     public final static String MAIL_SIGNUP_SUBJECT = "MyBlog: verification email";
-    public final static String MAIL_SIGNUP_BODY = "Please click here to confirm your email : http://localhost:8081/api/v1/auth/confirm/";
+    public final static String MAIL_SIGNUP_BODY = "Please click here to confirm your email : http://localhost:8081/api/v0/auth/confirm/";
 
     public final static String ACCESS_DENIED = "YOU ARE NOT AUTHORIZED TO PERMORM THIS ACTION";
 

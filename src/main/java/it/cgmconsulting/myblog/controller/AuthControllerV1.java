@@ -37,4 +37,6 @@ public class AuthControllerV1 {
         return ResponseEntity.ok(authService.modifyUserAuthority(id, auth));
     }
 
+
+
 }
