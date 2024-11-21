@@ -21,7 +21,8 @@ public class AuthControllerV1 {
         return ResponseEntity.ok(authService.signup(request));
     }
 
-    @PatchMapping("/v0/auth/confirm/{confirmCode}")
+        //TODO: non è un patch!
+    @GetMapping("/v0/auth/confirm/{confirmCode}")
     public ResponseEntity<String> verifyEmail(@PathVariable String confirmCode){
         return ResponseEntity.ok(authService.verifyEmail(confirmCode));
     }
