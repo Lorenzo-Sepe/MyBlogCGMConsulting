@@ -33,18 +33,20 @@ public class UserService {
 
     public UserResponse getMe(UserDetails userDetails) {
         User user = (User) userDetails;
-        return UserResponse.fromEntityToDTO(user);
+        return UserResponse.fromEntityToDto(user);
     }
 
     public UserResponse changeUsernameAndEmail(UserDetails userDetails, String username, String email) {
+        // siccome username e email sono unique sul db, devo verificare che eventuali username o email non siano già
+        // in uso da un utente diverso da se stesso.
         User user = (User) userDetails;
         if(userRepository.existsByEmailAndIdNot(email, user.getId()))
-            throw new ConflictException(Msg.MAIL_ALREADY_PRESENT);
+            throw new ConflictException(Msg.EMAIL_ALREADY_PRESENT);
         if(userRepository.existsByUsernameAndIdNot(username, user.getId()))
-            throw new ConflictException(Msg.USER_ALREADY_PRESENT);
-        user.setUsername(username);
+            throw new ConflictException(Msg.USERNAME_ALREADY_PRESENT);
         user.setEmail(email);
+        user.setUsername(username);
         userRepository.save(user);
-        return UserResponse.fromEntityToDTO(user);
+        return UserResponse.fromEntityToDto(user);
     }
 }

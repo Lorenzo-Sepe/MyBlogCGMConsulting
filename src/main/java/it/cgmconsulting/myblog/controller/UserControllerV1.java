@@ -23,13 +23,7 @@ public class UserControllerV1 {
 
     private final UserService userService;
 
-    @GetMapping("/v1/user")
-    public ResponseEntity<UserResponse> getMe(@AuthenticationPrincipal UserDetails userDetails){
-        return ResponseEntity.ok(userService.getMe(userDetails));
-    }
-
-    // cambiare la password
-    @PatchMapping("/v1/user/change_pwd")
+    @PatchMapping("/v1/users/change_pwd")
     public ResponseEntity<String> changePassword(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam String oldPwd,
@@ -40,19 +34,23 @@ public class UserControllerV1 {
             String newPwd,
             String newPwd2){
         return ResponseEntity.ok(userService.changePwd(userDetails, oldPwd, newPwd, newPwd2));
-
     }
 
-    // cambio username / email
-    @PatchMapping("/v1/users")
-    public ResponseEntity<UserResponse> changeUsernameAndEmail(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @RequestParam @NotBlank(message = "Username non può essere nullo") @Size(max = 20, min=3, message = "Username di lunghezza non idonea. Scegliere un Username compreso tra 3 e 20 charatteri") String username,
-            @RequestParam @Email(message = "Email non valida") String email
-            ){
-        return ResponseEntity.ok(userService.changeUsernameAndEmail(userDetails,username, email));
-    }
+  @GetMapping("/v1/users")
+  public ResponseEntity<UserResponse> getMe(@AuthenticationPrincipal UserDetails userDetails){
+        return ResponseEntity.ok(userService.getMe(userDetails));
+  }
 
-    // aggiornamento avatar
+
+  @PatchMapping("v1/users")
+  public ResponseEntity<UserResponse> changeUsernameAndEmail(
+          @AuthenticationPrincipal UserDetails userDetails,
+          @RequestParam @NotBlank @Size(max = 20, min = 3) String username,
+          @RequestParam @Email String email){
+        return ResponseEntity.ok(userService.changeUsernameAndEmail(userDetails, username, email));
+  }
+
+
+
 
 }

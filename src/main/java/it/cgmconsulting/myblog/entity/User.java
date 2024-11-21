@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
-@Table(name = "user")
+@Table(name = "_user")
 public class User extends CreationUpdate implements UserDetails {
 
     @Id
@@ -39,7 +39,7 @@ public class User extends CreationUpdate implements UserDetails {
     @JoinColumn(nullable = false)
     private Authority authority;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Avatar avatar;
 
     private String confirmCode;

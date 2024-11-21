@@ -2,26 +2,36 @@ package it.cgmconsulting.myblog.payload.response;
 
 import it.cgmconsulting.myblog.entity.Avatar;
 import it.cgmconsulting.myblog.entity.User;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Data @AllArgsConstructor @NoArgsConstructor
+@Data @NoArgsConstructor @AllArgsConstructor
 public class UserResponse {
 
     private int id;
     private String username;
     private String email;
-    private Avatar avatar;
-    private LocalDate createdAt;
+    private AvatarResponse avatar;
+    private LocalDate registeredAt;
 
-    public static UserResponse fromEntityToDTO(User user){
+    public static UserResponse fromEntityToDto(User user){
         return new UserResponse(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getAvatar(),
+                checkAvatar(user),
                 user.getCreatedAt().toLocalDate()
         );
     }
+
+    private static AvatarResponse checkAvatar(User user){
+        if(user.getAvatar() != null)
+            return AvatarResponse.fromEntityToResponse(user.getAvatar());
+        return null;
+
+    }
+
 }
