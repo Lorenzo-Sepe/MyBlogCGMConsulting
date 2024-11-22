@@ -40,6 +40,7 @@ public class Msg {
 
     // -------------------- POST
     public final static String POST_TITLE_IN_USE = "Post title already in use";
+    public final static String POST_UNAUTHORIZED_ACCESS = "The post can modified only by owner";
 
 
 }

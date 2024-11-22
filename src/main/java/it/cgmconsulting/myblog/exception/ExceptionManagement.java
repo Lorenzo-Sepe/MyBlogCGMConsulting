@@ -38,12 +38,17 @@ public class ExceptionManagement {
 
     @ExceptionHandler({BadCredentialsException.class})
     public ResponseEntity<String> badCredentialsExceptionManagement(BadCredentialsException ex){
-        return new ResponseEntity<String>(ex.getMessage(), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<String>(ex.getMessage(), HttpStatus.FORBIDDEN); // 403
     }
 
     @ExceptionHandler({BadRequestException.class})
     public ResponseEntity<String> badRequestExceptionManagement(BadRequestException ex){
-        return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST); // 400
+    }
+
+    @ExceptionHandler({UnauthorizedException.class})
+    public ResponseEntity<String> unauthorizedExceptionManagement(UnauthorizedException ex){
+        return new ResponseEntity<String>(ex.getMessage(), HttpStatus.UNAUTHORIZED);  // 401
     }
 
     // Per la gestione delle eccezioni sollevate dalle annotazioni di validazione con @Validated

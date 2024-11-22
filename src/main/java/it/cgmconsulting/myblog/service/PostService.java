@@ -4,6 +4,7 @@ import it.cgmconsulting.myblog.entity.Post;
 import it.cgmconsulting.myblog.entity.User;
 import it.cgmconsulting.myblog.exception.BadRequestException;
 import it.cgmconsulting.myblog.exception.ResourceNotFoundException;
+import it.cgmconsulting.myblog.exception.UnauthorizedException;
 import it.cgmconsulting.myblog.payload.request.PostRequest;
 import it.cgmconsulting.myblog.payload.response.PostResponse;
 import it.cgmconsulting.myblog.repository.PostRepository;
@@ -12,6 +13,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -42,11 +45,29 @@ public class PostService {
             throw new BadRequestException(Msg.POST_TITLE_IN_USE);
         Post post = postRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Post", "id", id));
+        // verifico che autore del post e autore che lo modifica coincidano
+        if(post.getUser().getId() != ((User) userDetails).getId())
+            throw new UnauthorizedException(Msg.POST_UNAUTHORIZED_ACCESS);
         post.setTitle(request.getTitle());
         post.setOverview(request.getOverview());
         post.setContent(request.getContent());
         post.setPublishedAt(null);
         postRepository.save(post); // non serve in virtù dell'annotazione @Transactional
         return PostResponse.fromEntityToDto(post);
+    }
+
+    public PostResponse getPost(int id) {
+        /*
+        Post post = postRepository.findByIdAndPublishedAtIsNotNullAndPublishedAtLessThanEqual(id, LocalDate.now())
+                .orElseThrow(()-> new ResourceNotFoundException("Post", "id", id));
+         */
+        /*
+        Post post = postRepository.getPost(id, LocalDate.now())
+                .orElseThrow(()-> new ResourceNotFoundException("Post", "id", id));
+        return PostResponse.fromEntityToDto(post);
+        */
+         PostResponse postResponse = postRepository.getPostResponse(id, LocalDate.now())
+                 .orElseThrow(()-> new ResourceNotFoundException("Post", "id", id));
+         return postResponse;
     }
 }

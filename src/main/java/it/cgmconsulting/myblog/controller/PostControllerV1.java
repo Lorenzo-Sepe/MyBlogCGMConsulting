@@ -35,4 +35,10 @@ public class PostControllerV1 {
             @PathVariable int id){
         return ResponseEntity.ok(postService.update(userDetails, request, id));
     }
+
+    @GetMapping("/v0/posts/{id}")
+    public ResponseEntity<PostResponse> getPost(@PathVariable int id){
+        return ResponseEntity.ok(postService.getPost(id));
+    }
+
 }
