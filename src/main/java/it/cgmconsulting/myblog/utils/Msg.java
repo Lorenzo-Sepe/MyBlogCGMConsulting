@@ -2,7 +2,7 @@ package it.cgmconsulting.myblog.utils;
 
 public class Msg {
 
-    public final static String TAG_ALREADY_PRESENT = "Tag already present";
+    // -------------------- USER
     public final static String USER_ALREADY_PRESENT = "Email or username already present";
     public final static String USERNAME_ALREADY_PRESENT = "Username already in use";
     public final static String EMAIL_ALREADY_PRESENT = "Email already in use";
@@ -16,6 +16,10 @@ public class Msg {
     public final static String INVALID_AUTHORITY = "Invalid authority name";
 
     public final static String MAIL_SIGNUP_SUBJECT = "MyBlog: verification email";
+
+    // l'endpoint presente nell'email va copiato e messo su postman con metodo PATCH.
+    // Se lanciato direttamente dall'email, ovvero da browser,
+    // la chiamata fallisce in quando il browser permette solo chiamate GET
     public final static String MAIL_SIGNUP_BODY = "Please click here to confirm your email : http://localhost:8081/api/v0/auth/confirm/";
 
     public final static String ACCESS_DENIED = "YOU ARE NOT AUTHORIZED TO PERMORM THIS ACTION";
@@ -24,11 +28,18 @@ public class Msg {
     public final static String PWD_CHANGED = "Password successfully updated";
     public final static String PWD_INCORRECT = "Wrong Password";
 
+    // -------------------- UPLOAD FILE
     public final static String FILE_TOO_LARGE = "File size not allowed";
     public final static String FILE_NOT_VALID_IMAGE = "Image not valid";
     public final static String FILE_INVALID_DIMENSIONS = "Invalid image width or height";
     public final static String FILE_EXTENSION_NOT_ALLOWED = "Image type not allowed";
     public final static String FILE_EXTENSION_MISSING = "Missing image type";
+
+    // -------------------- TAG
+    public final static String TAG_ALREADY_PRESENT = "Tag already present";
+
+    // -------------------- POST
+    public final static String POST_TITLE_IN_USE = "Post title already in use";
 
 
 }

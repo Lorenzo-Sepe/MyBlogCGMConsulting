@@ -35,9 +35,8 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        System.out.println("SecurityFilterChain");
         http.csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(requests -> requests
+            . authorizeHttpRequests(requests -> requests
                 .requestMatchers(
                         "/v0/auth/**", "/v0/**", "/{pathvariable:[0-9A-Za-z]+}/v0/**"
                 ).permitAll()

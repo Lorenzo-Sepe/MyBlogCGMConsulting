@@ -34,6 +34,10 @@ spring:
         format_sql: true
     show-sql: true
     open-in-view: false
+    defer-datasource-initialization: true
+
+  # all'avvio dell'applicazione viene eseguito data.sql presente in resource
+  sql.init.mode: never
 
   mail:
     # host: smtp.gmail.com

@@ -75,7 +75,7 @@ public class AuthService {
         if(!user.isEnabled()) {
             Authority authority = authorityRepository.findByDefaultAuthorityTrueAndVisibleTrue()
                     .orElseThrow(() -> new ResourceNotFoundException("Authority", "defaultAuthority", true));
-            if (!authority.getAuthorityName().name().equals(user.getAuthority().getAuthorityName().name()))
+            if (authority.getAuthorityName().name().equals(user.getAuthority().getAuthorityName().name()))
                 throw new DisabledException("Please check your email to activate your account");
             throw new DisabledException("You are banned");
         }
@@ -114,6 +114,4 @@ public class AuthService {
         userRepository.save(user);
         return Msg.AUTHORITY_CHANGED;
     }
-
-
 }
