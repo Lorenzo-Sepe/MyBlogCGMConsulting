@@ -1,6 +1,7 @@
 package it.cgmconsulting.myblog.repository;
 
 import it.cgmconsulting.myblog.entity.User;
+import it.cgmconsulting.myblog.entity.enumeration.AuthorityName;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -24,6 +25,14 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     boolean existsByUsernameAndIdNot(String username, int id);
     boolean existsByEmailAndIdNot(String email, int id);
+
+    Optional<User> findByIdAndEnabledTrueAndAuthorityAuthorityNameIs(int id, AuthorityName authority);
+
+    @Query(value="SELECT u.id FROM User u " +
+            "WHERE u.authority.authorityName = :authority " +
+            "AND u.id = :userId " +
+            "AND u.enabled = true")
+    Optional<Integer> getValidAuthor(AuthorityName authority, int userId);
 
 
 }

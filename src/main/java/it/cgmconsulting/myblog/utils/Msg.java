@@ -42,5 +42,7 @@ public class Msg {
     public final static String POST_TITLE_IN_USE = "Post title already in use";
     public final static String POST_UNAUTHORIZED_ACCESS = "The post can modified only by owner";
 
+    public final static String POST_SAME_AUTHOR = "Old and new author are the same";
+
 
 }

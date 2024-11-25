@@ -2,12 +2,15 @@ package it.cgmconsulting.myblog.service;
 
 import it.cgmconsulting.myblog.entity.Post;
 import it.cgmconsulting.myblog.entity.User;
+import it.cgmconsulting.myblog.entity.enumeration.AuthorityName;
 import it.cgmconsulting.myblog.exception.BadRequestException;
+import it.cgmconsulting.myblog.exception.ConflictException;
 import it.cgmconsulting.myblog.exception.ResourceNotFoundException;
 import it.cgmconsulting.myblog.exception.UnauthorizedException;
 import it.cgmconsulting.myblog.payload.request.PostRequest;
 import it.cgmconsulting.myblog.payload.response.PostResponse;
 import it.cgmconsulting.myblog.repository.PostRepository;
+import it.cgmconsulting.myblog.repository.UserRepository;
 import it.cgmconsulting.myblog.utils.Msg;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +18,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     public PostResponse create(UserDetails userDetails, PostRequest request){
         // verifico che non esista già un post con quel titolo. Il titolo del post sul db è UNIQUE
@@ -57,17 +63,29 @@ public class PostService {
     }
 
     public PostResponse getPost(int id) {
-        /*
-        Post post = postRepository.findByIdAndPublishedAtIsNotNullAndPublishedAtLessThanEqual(id, LocalDate.now())
-                .orElseThrow(()-> new ResourceNotFoundException("Post", "id", id));
-         */
-        /*
-        Post post = postRepository.getPost(id, LocalDate.now())
-                .orElseThrow(()-> new ResourceNotFoundException("Post", "id", id));
-        return PostResponse.fromEntityToDto(post);
-        */
          PostResponse postResponse = postRepository.getPostResponse(id, LocalDate.now())
                  .orElseThrow(()-> new ResourceNotFoundException("Post", "id", id));
          return postResponse;
+    }
+
+    @Transactional
+    public PostResponse publishPost(int id, LocalDate publishedAt) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Post", "id", id));
+        post.setPublishedAt(publishedAt);
+        return PostResponse.fromEntityToDto(post);
+    }
+
+    public String reassignPost(int oldAuthorId, int newAuthorId, Optional<Integer> postId) {
+
+        int newAuthor = userRepository.getValidAuthor(AuthorityName.AUTHOR, newAuthorId)
+                .orElseThrow(()-> new ResourceNotFoundException("User", "id", newAuthorId));
+
+        if(postId.isEmpty())
+        // cambio il vecchio author col nuovo su tutti i post
+            postRepository.updatePostsAuthor(oldAuthorId, newAuthor);
+        else
+            postRepository.updatePostAuthor(newAuthor, postId.get());
+        return "All posts have been reassigned";
     }
 }
