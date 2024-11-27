@@ -1,13 +1,20 @@
 package it.cgmconsulting.myblog.service;
 
 import it.cgmconsulting.myblog.entity.Avatar;
+import it.cgmconsulting.myblog.entity.Post;
 import it.cgmconsulting.myblog.entity.User;
 import it.cgmconsulting.myblog.exception.BadRequestException;
+import it.cgmconsulting.myblog.exception.ConflictException;
+import it.cgmconsulting.myblog.exception.ResourceNotFoundException;
+import it.cgmconsulting.myblog.exception.UnauthorizedException;
 import it.cgmconsulting.myblog.payload.response.AvatarResponse;
+import it.cgmconsulting.myblog.payload.response.PostResponse;
 import it.cgmconsulting.myblog.payload.response.UserResponse;
 import it.cgmconsulting.myblog.repository.AvatarRepository;
+import it.cgmconsulting.myblog.repository.PostRepository;
 import it.cgmconsulting.myblog.repository.UserRepository;
 import it.cgmconsulting.myblog.utils.Msg;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,8 +24,12 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +37,7 @@ public class ImageService {
 
     private final AvatarRepository avatarRepository;
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
     public AvatarResponse addAvatar(UserDetails userDetails, MultipartFile file,
                                     long size, int width, int height, String[] extensions) throws IOException {
 
@@ -44,6 +56,59 @@ public class ImageService {
             return AvatarResponse.fromEntityToResponse(avatar);
         }
         return null;
+    }
+
+    @Transactional
+    public PostResponse addPostImage(UserDetails userDetails, MultipartFile file,
+                                     long size, int width, int height, String[] extensions, String imagePath, int postId) throws IOException {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(()-> new ResourceNotFoundException("Post", "id", postId));
+
+        // verifico che autore del post e utente loggato siano lo stesso user
+        checkAuthor(post.getUser().getId(), ((User) userDetails).getId());
+
+        if(checkSize(file,size) && checkDimension(file, width, height) && checkExtension(file, extensions)) {
+            // se un'immagine è già presente, la cancello prima di caricarne un'altra
+            deletePostImage(post.getImage(), imagePath);
+            // genero un nuovo nome per l'immagine da caricare
+            String filename = file.getOriginalFilename();
+            String ext = filename.substring(filename.lastIndexOf(".")+1);
+            String newFilename = postId+"_"+ UUID.randomUUID().toString()+"."+ext;
+            Path p = Paths.get(imagePath+newFilename);
+            try{
+                Files.write(p, file.getBytes());
+                post.setImage(newFilename);
+                post.setPublishedAt(null);
+            } catch(Exception e){
+                throw new ConflictException(Msg.FILE_ERROR_UPLOAD);
+            }
+        }
+        return PostResponse.fromEntityToDto(post, imagePath);
+    }
+
+    @Transactional
+    public PostResponse deletePostImage(UserDetails userDetails, int postId, String imagePath){
+        Post post = postRepository.findById(postId)
+                .orElseThrow(()-> new ResourceNotFoundException("Post", "id", postId));
+        checkAuthor(post.getUser().getId(), ((User) userDetails).getId());
+        deletePostImage(post.getImage(), imagePath);
+        post.setImage(null);
+        return PostResponse.fromEntityToDto(post, imagePath);
+    }
+
+    protected void checkAuthor(int postAuthorId, int userDetailsId){
+        if(postAuthorId != userDetailsId)
+            throw new UnauthorizedException(Msg.POST_UNAUTHORIZED_ACCESS);
+    }
+
+    private void deletePostImage(String filename, String imagePath){
+        try {
+            if (filename != null) {
+                Files.delete(Paths.get(imagePath + filename));
+            }
+        } catch(Exception e){
+            throw new ConflictException(Msg.FILE_ERROR_DELETE);
+        }
     }
 
     private boolean checkSize(MultipartFile file, long size){
@@ -97,4 +162,6 @@ public class ImageService {
         user.setAvatar(null);
         return UserResponse.fromEntityToDto(user);
     }
+
+
 }

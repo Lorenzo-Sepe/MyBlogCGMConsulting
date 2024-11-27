@@ -80,6 +80,14 @@ application:
       width: 512
       height: 512
       extensions: image/jpg,image/jpeg,image/png,image/webp
+    post:
+      # 50Kb
+      size: 51200
+      width: 600
+      height: 200
+      extensions: image/jpg,image/jpeg,image/webp
+      imagePath: /Users/Public/myblog/post/images/
+
 
 
 

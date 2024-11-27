@@ -34,6 +34,8 @@ public class Msg {
     public final static String FILE_INVALID_DIMENSIONS = "Invalid image width or height";
     public final static String FILE_EXTENSION_NOT_ALLOWED = "Image type not allowed";
     public final static String FILE_EXTENSION_MISSING = "Missing image type";
+    public final static String FILE_ERROR_UPLOAD = "Upload file failed";
+    public final static String FILE_ERROR_DELETE = "Delete file failed";
 
     // -------------------- TAG
     public final static String TAG_ALREADY_PRESENT = "Tag already present";
@@ -43,6 +45,9 @@ public class Msg {
     public final static String POST_UNAUTHORIZED_ACCESS = "The post can modified only by owner";
 
     public final static String POST_SAME_AUTHOR = "Old and new author are the same";
+
+    public final static String POSTS_REASSIGNEMENT = "All posts have been reassigned";
+    public final static String POST_REASSIGNEMENT = "The post has been reassigned";
 
 
 }

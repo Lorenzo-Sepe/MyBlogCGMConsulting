@@ -41,4 +41,8 @@ public class TagService {
             return tagRepository.getAll(visible.get());
         return tagRepository.getAll();
     }
+
+    public Set<Tag> findVisibleTags(Set<String> tags){
+        return tagRepository.findByVisibleTrueAndIdIn(tags);
+    }
 }

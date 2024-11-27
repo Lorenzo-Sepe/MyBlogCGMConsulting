@@ -30,12 +30,13 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "p.overview, " +
             "p.content, " +
             "p.user.username, " +
-            "p.image," +
+            //":imagePath || p.image as image," +
+            "CASE WHEN p.image IS NOT NULL THEN :imagePath || p.image ELSE p.image END, " +
             "p.publishedAt" +
             ") FROM Post p " + // Post scritto esattamente come il nome della classe, con la P maiuscola
             "WHERE p.id = :id " +
             "AND (p.publishedAt IS NOT NULL AND p.publishedAt <= :now)")
-    Optional<PostResponse> getPostResponse(int id, LocalDate now);
+    Optional<PostResponse> getPostResponse(int id, LocalDate now, String imagePath);
 
     List<Post> findByUserId(int authorId);
 

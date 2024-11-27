@@ -26,7 +26,7 @@ public class Post extends CreationUpdate {
     @Column(length = 10000, nullable = false)
     private String content;
 
-    private String image; // nome file + estensione
+    private String image; // nome file + estensione da rinominare in -> postId_UUID.estensione
 
     private LocalDate publishedAt;
 
