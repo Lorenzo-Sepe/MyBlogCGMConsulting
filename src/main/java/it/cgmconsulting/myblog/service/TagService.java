@@ -47,10 +47,9 @@ public class TagService {
         return tagRepository.findByVisibleTrueAndIdIn(tags);
     }
 
-    public Set<String> getTagByPost(int postId){
-        return tagRepository.getTagByPost(postId);
+    public Set<String> getTagsByPost(int postId){
+        return tagRepository.getTagsByPost(postId);
     }
-
 
 
 }

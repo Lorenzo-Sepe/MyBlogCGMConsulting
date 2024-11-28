@@ -37,7 +37,7 @@ spring:
     defer-datasource-initialization: true
 
   # all'avvio dell'applicazione viene eseguito data.sql presente in resource
-  sql.init.mode: always
+  sql.init.mode: never
 
   mail:
     # host: smtp.gmail.com
@@ -54,6 +54,12 @@ spring:
           auth: true
           starttls:
             required: true
+
+spring-doc:
+  swagger-ui:
+    enabled: true
+    # http://localhost:8081/api/swagger-ui/index.html
+    path: /swagger-ui/index.html
 
 # LOGGING
 logging:
@@ -89,8 +95,5 @@ application:
       imagePath: /Users/Public/myblog/post/images/
 
 
-spring-doc:
-  swagger-ui:
-    enabled: true # http://localhost:8081/api/swagger-ui/index.html path: /swagger-ui/index.html
 
 

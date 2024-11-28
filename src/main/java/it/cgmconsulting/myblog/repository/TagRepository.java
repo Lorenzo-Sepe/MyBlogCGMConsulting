@@ -30,9 +30,12 @@ public interface TagRepository extends JpaRepository<Tag, String> {
             "ORDER BY t.id")
     List<TagResponse> getAll(); // SELECT t.id, t.visible FROM tag t ORDER BY t.id
 
-
     Set<Tag> findByVisibleTrueAndIdIn(Set<String> tags); // select * from tag where visible = 1 and id in(...);
 
-    @Query(value="SELECT pt.id FROM Post p INNER JOIN p.tags pt where p.id = :postId and pt.visible=TRUE ORDER BY pt.id")
-    Set<String> getTagByPost(int postId);
+    @Query(value="SELECT pt.id FROM Post p " +
+            "INNER JOIN p.tags pt " +
+            "WHERE p.id = :postId " +
+            "AND pt.visible = true " +
+            "ORDER BY pt.id")
+    Set<String> getTagsByPost(int postId);
 }

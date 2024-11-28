@@ -22,7 +22,7 @@ public class Comment extends CreationUpdate {
     private Post post;
 
     @Column(nullable = false)
-    private String commentContent;
+    private String comment;
 
     private boolean censored;
 

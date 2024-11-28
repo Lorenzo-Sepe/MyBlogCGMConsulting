@@ -4,7 +4,6 @@ import it.cgmconsulting.myblog.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDate;
@@ -45,5 +44,4 @@ public class PostResponse {
                 post.getPublishedAt()
         );
     }
-
 }

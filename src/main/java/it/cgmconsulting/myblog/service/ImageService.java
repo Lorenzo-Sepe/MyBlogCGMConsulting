@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -72,7 +73,7 @@ public class ImageService {
             deletePostImage(post.getImage(), imagePath);
             // genero un nuovo nome per l'immagine da caricare
             String filename = file.getOriginalFilename();
-            String ext = filename.substring(filename.lastIndexOf(".")+1);
+            String ext = filename != null ? filename.substring(filename.lastIndexOf(".") + 1) : null;
             String newFilename = postId+"_"+ UUID.randomUUID().toString()+"."+ext;
             Path p = Paths.get(imagePath+newFilename);
             try{

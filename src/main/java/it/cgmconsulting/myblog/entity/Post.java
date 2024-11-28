@@ -43,5 +43,5 @@ public class Post extends CreationUpdate {
     private Set<Tag> tags = new HashSet<>();
 
     @OneToMany(mappedBy = "post")
-    private List<Comment> comments;
+    List<Comment> comments;
 }

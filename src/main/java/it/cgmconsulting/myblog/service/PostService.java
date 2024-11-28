@@ -62,14 +62,14 @@ public class PostService {
         post.setPublishedAt(null);
         postRepository.save(post); // non serve in virtù dell'annotazione @Transactional
         PostResponse postResponse = PostResponse.fromEntityToDto(post, imagePath);
-        postResponse.setTags(tagService.getTagByPost(id));
+        postResponse.setTags(tagService.getTagsByPost(id));
         return postResponse;
     }
 
     public PostResponse getPost(int id, String imagePath) {
          PostResponse postResponse = postRepository.getPostResponse(id, LocalDate.now(), imagePath)
                  .orElseThrow(()-> new ResourceNotFoundException("Post", "id", id));
-         postResponse.setTags(tagService.getTagByPost(id));
+         postResponse.setTags(tagService.getTagsByPost(id));
          return postResponse;
     }
 
@@ -79,7 +79,7 @@ public class PostService {
                 .orElseThrow(()-> new ResourceNotFoundException("Post", "id", id));
         post.setPublishedAt(publishedAt);
         PostResponse postResponse = PostResponse.fromEntityToDto(post, imagePath);
-        postResponse.setTags(tagService.getTagByPost(id));
+        postResponse.setTags(tagService.getTagsByPost(id));
         return postResponse;
     }
 
@@ -106,7 +106,7 @@ public class PostService {
         Set<Tag> newTags = tagService.findVisibleTags(tags);
         post.setTags(newTags);
         PostResponse postResponse = PostResponse.fromEntityToDto(post, imagePath);
-        postResponse.setTags(tagService.getTagByPost(postId));
+        postResponse.setTags(tagService.getTagsByPost(postId));
         return postResponse;
     }
 

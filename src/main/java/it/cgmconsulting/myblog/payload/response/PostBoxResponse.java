@@ -5,15 +5,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor @AllArgsConstructor
 public class PostBoxResponse {
+
     private int id;
     private String title;
     private String overview;
-    private String author;
-    private String image;
+    private String author; // username dello user autore del post
+    private String image;  // imagePath + nomefile.ext
 
-    private long comments; //numero commenti
-    private double rating; //media voti
+    private long comments; // numero di commenti di un post
+    private double rating; // voto medio di un post
+
 }
