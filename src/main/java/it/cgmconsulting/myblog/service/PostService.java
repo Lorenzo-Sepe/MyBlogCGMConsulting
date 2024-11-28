@@ -61,12 +61,15 @@ public class PostService {
         post.setContent(request.getContent());
         post.setPublishedAt(null);
         postRepository.save(post); // non serve in virtù dell'annotazione @Transactional
-        return PostResponse.fromEntityToDto(post, imagePath);
+        PostResponse postResponse = PostResponse.fromEntityToDto(post, imagePath);
+        postResponse.setTags(tagService.getTagByPost(id));
+        return postResponse;
     }
 
     public PostResponse getPost(int id, String imagePath) {
          PostResponse postResponse = postRepository.getPostResponse(id, LocalDate.now(), imagePath)
                  .orElseThrow(()-> new ResourceNotFoundException("Post", "id", id));
+         postResponse.setTags(tagService.getTagByPost(id));
          return postResponse;
     }
 
@@ -75,7 +78,9 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Post", "id", id));
         post.setPublishedAt(publishedAt);
-        return PostResponse.fromEntityToDto(post, imagePath);
+        PostResponse postResponse = PostResponse.fromEntityToDto(post, imagePath);
+        postResponse.setTags(tagService.getTagByPost(id));
+        return postResponse;
     }
 
     public String reassignPost(int oldAuthorId, int newAuthorId, Optional<Integer> postId) {
@@ -100,7 +105,11 @@ public class PostService {
         imageService.checkAuthor(post.getUser().getId(), ((User) userDetails).getId());
         Set<Tag> newTags = tagService.findVisibleTags(tags);
         post.setTags(newTags);
-        return PostResponse.fromEntityToDto(post, imagePath);
+        PostResponse postResponse = PostResponse.fromEntityToDto(post, imagePath);
+        postResponse.setTags(tagService.getTagByPost(postId));
+        return postResponse;
     }
+
+
 
 }

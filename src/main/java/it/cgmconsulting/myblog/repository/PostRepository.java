@@ -1,8 +1,11 @@
 package it.cgmconsulting.myblog.repository;
 
 import it.cgmconsulting.myblog.entity.Post;
+import it.cgmconsulting.myblog.payload.response.PostBoxResponse;
 import it.cgmconsulting.myblog.payload.response.PostResponse;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -54,4 +57,15 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     @Query(value="UPDATE Post p SET p.user.id = :newAuthorId " +
             "WHERE p.id = :postId")
     void updatePostAuthor(int newAuthorId, int postId);
+
+    @Query(value="SELECT new it.cgmconsulting.myblog.payload.response.PostBoxResponse(p.id, " +
+            "p.title, " +
+            "p.overview, " +
+            "p.user.username, " +
+            "p.image, " +
+            "SIZE(p.comments), " +
+            "(SELECT COALESCE(AVG(r.rate), 0.0) FROM Rating r WHERE r.ratingId.post.id = p.id)) " +
+            "FROM Post p INNER JOIN p.tags t ON (t.id = :tag AND t.visible = true) " +
+            "WHERE p.publishedAt IS NOT NULL AND p.publishedAt <= :now")
+    Page<PostBoxResponse> getVisiblePostsByTag(Pageable pageable, String tag, LocalDate now);
 }
