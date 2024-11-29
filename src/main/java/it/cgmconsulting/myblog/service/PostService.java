@@ -8,18 +8,26 @@ import it.cgmconsulting.myblog.exception.BadRequestException;
 import it.cgmconsulting.myblog.exception.ResourceNotFoundException;
 import it.cgmconsulting.myblog.exception.UnauthorizedException;
 import it.cgmconsulting.myblog.payload.request.PostRequest;
+import it.cgmconsulting.myblog.payload.response.PostBoxResponse;
 import it.cgmconsulting.myblog.payload.response.PostResponse;
 import it.cgmconsulting.myblog.repository.PostRepository;
 import it.cgmconsulting.myblog.repository.UserRepository;
 import it.cgmconsulting.myblog.utils.Msg;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +37,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final ImageService imageService;
     private final TagService tagService;
+    private final UserService userService;
 
     public PostResponse create(UserDetails userDetails, PostRequest request){
         // verifico che non esista già un post con quel titolo. Il titolo del post sul db è UNIQUE
@@ -111,5 +120,68 @@ public class PostService {
     }
 
 
+    public List<PostBoxResponse> getPaginatedPostsByTag(String tag, int pageNumber, int pageSize, String sortBy, String direction, String imagePath) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.Direction.valueOf(direction.toUpperCase()), sortBy);
+        Page<PostBoxResponse> list = postRepository.getVisiblePostsByTag(pageable, tag, LocalDate.now(), imagePath);
+        if(list.hasContent())
+            return list.getContent();
+        else return new ArrayList<PostBoxResponse>();
+    }
 
+    public List<PostBoxResponse> getPaginatedPostsByAuthor(String username, int pageNumber, int pageSize, String sortBy, String direction, String imagePath) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.Direction.valueOf(direction.toUpperCase()), sortBy);
+        Page<PostBoxResponse> list = postRepository.getPaginatedPostsByAuthor(pageable, username, LocalDate.now(), imagePath);
+        if(list.hasContent())
+            return list.getContent();
+        else return new ArrayList<PostBoxResponse>();
+    }
+
+    public List<PostBoxResponse> getLatestPostHomePage(int pageNumber, int pageSize, String sortBy, String direction, String imagePath) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.Direction.valueOf(direction.toUpperCase()), sortBy);
+        Page<PostBoxResponse> list = postRepository.getLatestPostHomePage(pageable, LocalDate.now(), imagePath);
+        if(list.hasContent())
+            return list.getContent();
+        else return new ArrayList<PostBoxResponse>();
+    }
+
+    public List<PostBoxResponse> getPaginatedPostsByKeyWord(String keyword, int pageNumber, int pageSize, String sortBy, String direction, String imagePath, boolean isExactMatch, boolean isCaseSensitive) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.Direction.valueOf(direction.toUpperCase()), sortBy);
+        Page<PostBoxResponse> list = postRepository.getPaginatedPostsByKeyWord(pageable, LocalDate.now(), imagePath, '%'+keyword+'%');
+
+        if(!list.getContent().isEmpty()) {
+
+            Pattern pattern = null;
+
+            if (!isCaseSensitive && !isExactMatch)
+                pattern = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE);
+            else if (!isCaseSensitive && isExactMatch)
+                pattern = Pattern.compile("\\b" + keyword + "\\b", Pattern.CASE_INSENSITIVE);
+            else if (isCaseSensitive && !isExactMatch)
+                pattern = Pattern.compile(keyword);
+            else
+                pattern = Pattern.compile("\\b" + keyword + "\\b");
+
+            List<PostBoxResponse> finalList = new ArrayList<>();
+            for (PostBoxResponse p : list.getContent()) {
+                if (pattern.matcher(p.getTitle()).find())
+                    finalList.add(p);
+            }
+            return finalList;
+        }
+        return new ArrayList<PostBoxResponse>();
+    }
+
+    @Transactional
+    public String addPreferredPost(UserDetails userDetails, int postId) {
+        Post post = postRepository.findByIdAndPublishedAtIsNotNullAndPublishedAtLessThanEqual(postId, LocalDate.now())
+                .orElseThrow(()-> new ResourceNotFoundException("Post", "id", postId));
+        User user = userService.getUserPreferredPost(((User) userDetails).getId());
+        if(user.getPreferredPosts().contains(post)) {
+            user.getPreferredPosts().remove(post);
+            return Msg.BOOKMARK_REMOVE;
+        } else {
+            user.getPreferredPosts().add(post);
+            return Msg.BOOKMARK_ADD;
+        }
+    }
 }

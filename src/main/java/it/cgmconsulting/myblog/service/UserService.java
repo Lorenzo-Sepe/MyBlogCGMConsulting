@@ -49,4 +49,8 @@ public class UserService {
         userRepository.save(user);
         return UserResponse.fromEntityToDto(user);
     }
+
+    User getUserPreferredPost(int userId){
+        return userRepository.getUserPreferredPost(userId);
+    }
 }

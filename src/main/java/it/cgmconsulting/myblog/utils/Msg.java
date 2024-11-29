@@ -49,5 +49,8 @@ public class Msg {
     public final static String POSTS_REASSIGNEMENT = "All posts have been reassigned";
     public final static String POST_REASSIGNEMENT = "The post has been reassigned";
 
+    public final static String BOOKMARK_ADD = "The post has been bookmarked";
+    public final static String BOOKMARK_REMOVE = "The post has been removed from bookmarks";
+
 
 }

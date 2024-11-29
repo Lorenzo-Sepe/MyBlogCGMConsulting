@@ -34,5 +34,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             "AND u.enabled = true")
     Optional<Integer> getValidAuthor(AuthorityName authority, int userId);
 
+    @Query(value="SELECT u FROM User u " +
+            "LEFT JOIN FETCH u.preferredPosts " +
+            "WHERE u.id = :userId")
+    User getUserPreferredPost(int userId);
+
 
 }
