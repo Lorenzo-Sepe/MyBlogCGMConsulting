@@ -22,3 +22,4 @@ INSERT IGNORE INTO post (created_at, updated_at, content, overview, published_at
 INSERT IGNORE INTO tag (id, created_at, updated_at, visible) VALUES ('Test 1', '2024-11-07 20:39:07.000000', NULL, b'1');
 INSERT IGNORE INTO tag (id, created_at, updated_at, visible) VALUES ('Test 2', '2024-11-07 20:39:07.000000', NULL, b'1');
 INSERT IGNORE INTO tag (id, created_at, updated_at, visible) VALUES ('Test 3', '2024-11-07 20:39:07.000000', NULL, b'1');
+INSERT IGNORE INTO tag (id, created_at, updated_at, visible) VALUES ('Test 4', '2024-11-07 20:39:07.000000', NULL, b'0');
