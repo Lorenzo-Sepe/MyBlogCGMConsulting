@@ -48,6 +48,7 @@ public class PostControllerV1 {
 
     @PostMapping("/v1/posts")
     @PreAuthorize("hasAuthority('AUTHOR')")
+    @Operation(summary = "Create a post", description = "Create a post inside the database", tags = {"Post"})
     public ResponseEntity<PostResponse> create(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody @Valid PostRequest request){
@@ -56,6 +57,7 @@ public class PostControllerV1 {
 
     @PatchMapping("/v1/posts/{id}")
     @PreAuthorize("hasAuthority('AUTHOR')")
+    @Operation(summary = "Update a post", description = "Edit a post already present in the database", tags = {"Post"})
     public ResponseEntity<PostResponse> update(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody @Valid PostRequest request,
@@ -64,12 +66,14 @@ public class PostControllerV1 {
     }
 
     @GetMapping("/v0/posts/{id}")
+    @Operation(summary = "Fetch a post by id", description = "I fetch a post by its id from the database", tags = {"Post"})
     public ResponseEntity<PostResponse> getPost(@PathVariable int id){
         return ResponseEntity.ok(postService.getPost(id, imagePath));
     }
 
     @PatchMapping("/v1/posts/{id}/publish")
     @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Publish a post", description = "The admin decides whether to approve the post with the following id", tags = {"Post"})
     public ResponseEntity<PostResponse> publishPost(@PathVariable int id, @RequestParam @NotNull @FutureOrPresent LocalDate publishedAt){
         return ResponseEntity.ok(postService.publishPost(id, publishedAt, imagePath));
     }
@@ -77,6 +81,7 @@ public class PostControllerV1 {
 
     @PatchMapping("/v1/posts/massive_reassign/{oldAuthorId}/{newAuthorId}")
     @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Reassign all posts", description = "Reassign all of a former employee's posts to a new subordinate", tags = {"Post"})
     public ResponseEntity<String> massiveReassignPost(
             @PathVariable int oldAuthorId,
             @PathVariable int newAuthorId,
@@ -86,6 +91,7 @@ public class PostControllerV1 {
 
     @PatchMapping("/v1/posts/{postId}/image")
     @PreAuthorize("hasAuthority('AUTHOR')")
+    @Operation(summary = "Add image to post", description = "Upload an image inside the post", tags = {"Post"})
     public ResponseEntity<PostResponse> addPostImage(@AuthenticationPrincipal UserDetails userDetails,
                                                      @RequestParam MultipartFile file,
                                                      @PathVariable int postId) throws IOException {
@@ -94,6 +100,7 @@ public class PostControllerV1 {
 
     @DeleteMapping("/v1/posts/{postId}/image")
     @PreAuthorize("hasAuthority('AUTHOR')")
+    @Operation(summary = "Delete an image", description = "Delete an image within a post", tags = {"Post"})
     public ResponseEntity<PostResponse> deletePostImage(@AuthenticationPrincipal UserDetails userDetails,
                                                         @PathVariable int postId){
         return ResponseEntity.ok(imageService.deletePostImage(userDetails, postId, imagePath));
@@ -101,6 +108,7 @@ public class PostControllerV1 {
 
     @PutMapping("/v1/posts/{postId}/tags")
     @PreAuthorize("hasAuthority('AUTHOR')")
+    @Operation(summary = "Add tags to the post", description = "Add tags to the post among existing ones", tags = {"Post"})
     public ResponseEntity<PostResponse> postTag(@AuthenticationPrincipal UserDetails userDetails,
                                                 @PathVariable int postId,
                                                 @RequestParam @NotEmpty Set<String> tags){
@@ -110,7 +118,8 @@ public class PostControllerV1 {
     @GetMapping("/v0/posts/tags")
     @Operation(
             summary = "LIST ALL POST PAGINATED",
-            description = "Post pagination")
+            description = "Post pagination"),
+            tags = {"Post"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful Operation"),
             @ApiResponse(responseCode = "404", description = "Resource not found"),
@@ -128,6 +137,7 @@ public class PostControllerV1 {
     }
 
     @GetMapping("/v0/posts/username")
+    @Operation(summary = "Author's Post", description = "Return the page with the author's posts", tags = {"Post"})
     public ResponseEntity<List<PostBoxResponse>> getPaginatedPostsByAuthor(
             @RequestParam @NotBlank @Size(max = 30) String username,
             @RequestParam(defaultValue = "0") int pageNumber, // numero di pagina da cui partire; 0 è la prima pagina
@@ -139,6 +149,7 @@ public class PostControllerV1 {
     }
 
     @GetMapping("/v0/posts/keyword") // ricerca dei post per parola chiave nel titolo (exactMatch e caseSensitive)
+    @Operation(summary = "Search for post by keyword", description = "Return the post with the specific keyword", tags = {"Post"})
     public ResponseEntity<List<PostBoxResponse>> getPaginatedPostsByKeyWord(
             @RequestParam @NotBlank @Size(max = 30) String keyword,
             @RequestParam(defaultValue = "0") int pageNumber, // numero di pagina da cui partire; 0 è la prima pagina
@@ -157,6 +168,7 @@ public class PostControllerV1 {
     }
 
     @GetMapping("/v0/posts/home-page") // in realta va bene per paginare i post secondo liberi criteri, non solo per la home-page
+    @Operation(summary = "Sorted by latest published post", description = "All posts are sorted by the latest post published", tags = {"Post"})
     public ResponseEntity<List<PostBoxResponse>> getLatestPostHomePage(
             @RequestParam(defaultValue = "0") int pageNumber, // numero di pagina da cui partire; 0 è la prima pagina
             @RequestParam(defaultValue = "3") int pageSize, // numero di elementi per pagina
@@ -168,6 +180,7 @@ public class PostControllerV1 {
 
     @PostMapping("/v1/posts/preferred/{postId}")
     //@PreAuthorize("hasAuthority('MEMBER')")
+    @Operation(summary = "Add or remove posts favorites", description = "Ability to add or remove posts from favorites", tags = {"Post"})
     public ResponseEntity<String> addOrRemovePreferredPost(@AuthenticationPrincipal UserDetails userDetails,
                                                    @PathVariable int postId){
         return ResponseEntity.ok(postService.addPreferredPost(userDetails, postId));
