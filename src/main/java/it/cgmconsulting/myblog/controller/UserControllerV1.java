@@ -1,5 +1,8 @@
 package it.cgmconsulting.myblog.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import it.cgmconsulting.myblog.payload.response.UserResponse;
 import it.cgmconsulting.myblog.service.UserService;
 import jakarta.validation.constraints.Email;
@@ -23,6 +26,10 @@ public class UserControllerV1 {
 
     private final UserService userService;
 
+    @Operation(
+            summary = "CHANGE PASSWORD OF USER",
+            description = "Method to change the password of the user in the database",
+            tags = {"User"})
     @PatchMapping("/v1/users/change_pwd")
     public ResponseEntity<String> changePassword(
             @AuthenticationPrincipal UserDetails userDetails,
@@ -36,12 +43,19 @@ public class UserControllerV1 {
         return ResponseEntity.ok(userService.changePwd(userDetails, oldPwd, newPwd, newPwd2));
     }
 
+    @Operation(
+            summary = "GET USER INFO OF CURRENT USER",
+            description = "Method to get the information of the current logged user",
+            tags = {"User"})
   @GetMapping("/v1/users")
   public ResponseEntity<UserResponse> getMe(@AuthenticationPrincipal UserDetails userDetails){
         return ResponseEntity.ok(userService.getMe(userDetails));
   }
 
-
+  @Operation(
+            summary = "CHANGE USERNAME AND OR EMAIL OF USER",
+            description = "Method to change the username and or email of the user in the database",
+            tags = {"User"})
   @PatchMapping("v1/users")
   public ResponseEntity<UserResponse> changeUsernameAndEmail(
           @AuthenticationPrincipal UserDetails userDetails,

@@ -1,5 +1,6 @@
 package it.cgmconsulting.myblog.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import it.cgmconsulting.myblog.entity.Avatar;
 import it.cgmconsulting.myblog.payload.response.AvatarResponse;
 import it.cgmconsulting.myblog.payload.response.UserResponse;
@@ -36,6 +37,10 @@ public class AvatarControllerV1 {
 
 
 
+    @Operation(
+            summary = "ADD AVATAR",
+            description = "Method to add an avatar to the user in the database",
+            tags = {"Avatar"})
     @PostMapping(value="/v1/avatars", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AvatarResponse> addAvatar(
             @AuthenticationPrincipal UserDetails userDetails,
@@ -45,6 +50,10 @@ public class AvatarControllerV1 {
 
     }
 
+    @Operation(
+            summary = "REMOVE AVATAR",
+            description = "Method to remove the avatar of the user in the database",
+            tags = {"Avatar"})
     @DeleteMapping("/v1/avatars")
     public ResponseEntity<UserResponse> removeAvatar(@AuthenticationPrincipal UserDetails userDetails){
         return ResponseEntity.ok(imageService.removeAvatar(userDetails));

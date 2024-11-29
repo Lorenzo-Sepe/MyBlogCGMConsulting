@@ -136,6 +136,15 @@ public class PostControllerV1 {
         return ResponseEntity.ok(postService.getPaginatedPostsByTag(tag, pageNumber, pageSize, sortBy, direction, imagePath));
     }
 
+    @Operation(
+            summary = "LIST ALL POST PAGINATED",
+            description = "Post pagination")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful Operation"),
+            @ApiResponse(responseCode = "404", description = "Resource not found"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
     @GetMapping("/v0/posts/username")
     @Operation(summary = "Author's Post", description = "Return the page with the author's posts", tags = {"Post"})
     public ResponseEntity<List<PostBoxResponse>> getPaginatedPostsByAuthor(

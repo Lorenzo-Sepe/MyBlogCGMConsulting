@@ -1,5 +1,6 @@
 package it.cgmconsulting.myblog.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import it.cgmconsulting.myblog.payload.request.SignInRequest;
 import it.cgmconsulting.myblog.payload.request.SignUpRequest;
 import it.cgmconsulting.myblog.payload.response.JwtAuthenticationResponse;
@@ -16,12 +17,20 @@ public class AuthControllerV1 {
 
     private final AuthService authService;
 
+    @Operation(
+            summary = "ADD A NEW USER",
+            description = "Method to add a new user to the database with a sign in procedure and send an email to confirm the registration",
+            tags = {"Tags"})
     @PostMapping("/v0/auth/signup")
     public ResponseEntity<String> signup(@RequestBody @Valid SignUpRequest request){
         return ResponseEntity.ok(authService.signup(request));
     }
 
-        //TODO: non è un patch!
+    @Operation(
+            summary = "GET VISIBLE TAGS",
+            description = "Method to get a list of all visible tags from the database",
+            tags = {"Tags"})
+    //TODO: non è un patch!
     @GetMapping("/v0/auth/confirm/{confirmCode}")
     public ResponseEntity<String> verifyEmail(@PathVariable String confirmCode){
         return ResponseEntity.ok(authService.verifyEmail(confirmCode));
