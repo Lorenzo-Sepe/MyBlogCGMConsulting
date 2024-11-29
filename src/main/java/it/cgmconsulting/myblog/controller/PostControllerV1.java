@@ -118,7 +118,7 @@ public class PostControllerV1 {
     @GetMapping("/v0/posts/tags")
     @Operation(
             summary = "LIST ALL POST PAGINATED",
-            description = "Post pagination"),
+            description = "Post pagination",
             tags = {"Post"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful Operation"),
@@ -138,7 +138,8 @@ public class PostControllerV1 {
 
     @Operation(
             summary = "LIST ALL POST PAGINATED",
-            description = "Post pagination")
+            description = "Post pagination",
+            tags = {"Post"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful Operation"),
             @ApiResponse(responseCode = "404", description = "Resource not found"),
@@ -146,7 +147,6 @@ public class PostControllerV1 {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @GetMapping("/v0/posts/username")
-    @Operation(summary = "Author's Post", description = "Return the page with the author's posts", tags = {"Post"})
     public ResponseEntity<List<PostBoxResponse>> getPaginatedPostsByAuthor(
             @RequestParam @NotBlank @Size(max = 30) String username,
             @RequestParam(defaultValue = "0") int pageNumber, // numero di pagina da cui partire; 0 è la prima pagina
