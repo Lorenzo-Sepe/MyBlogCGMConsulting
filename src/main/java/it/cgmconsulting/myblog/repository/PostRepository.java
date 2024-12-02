@@ -35,7 +35,8 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "p.user.username, " +
             //":imagePath || p.image as image," +
             "CASE WHEN p.image IS NOT NULL THEN :imagePath || p.image ELSE p.image END, " +
-            "p.publishedAt" +
+            "p.publishedAt, " +
+            "(SELECT COALESCE(AVG(r.rate), 0d) FROM Rating r WHERE r.ratingId.post.id = p.id) as rating" +
             ") FROM Post p " + // Post scritto esattamente come il nome della classe, con la P maiuscola
             "WHERE p.id = :id " +
             "AND (p.publishedAt IS NOT NULL AND p.publishedAt <= :now)")

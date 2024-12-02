@@ -17,4 +17,5 @@ public class Rating extends CreationUpdate {
 
     @Check(constraints = "rate > 0 AND rate < 6") // Check -> vincolo sul db per cui è impossibile inserire valori al di fuori del range specificato
     private byte rate; // espresso in stelline da 1 a 5
+
 }

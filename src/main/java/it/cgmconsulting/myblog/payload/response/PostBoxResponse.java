@@ -1,13 +1,12 @@
 package it.cgmconsulting.myblog.payload.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
 public class PostBoxResponse {
 
     private int id;
@@ -20,4 +19,14 @@ public class PostBoxResponse {
     private long comments; // numero di commenti di un post
     private double rating; // voto medio di un post
 
+    public PostBoxResponse(int id, String title, String overview, String author, String image, LocalDate publishedAt, long comments, double rating) {
+        this.id = id;
+        this.title = title;
+        this.overview = overview;
+        this.author = author;
+        this.image = image;
+        this.publishedAt = publishedAt;
+        this.comments = comments;
+        this.rating = Math.round(rating * 10.0) / 10.0; // arrotondamento alla prima cifra decimale
+    }
 }
