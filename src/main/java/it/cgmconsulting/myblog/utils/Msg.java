@@ -53,6 +53,9 @@ public class Msg {
     public final static String BOOKMARK_REMOVE = "The post has been removed from bookmarks";
 
     public final static String COMMENT_500 = "Something went wrong writing the comment";
+    public final static String COMMENT_UNAUTHORIZED_ACCESS = "The comment can modified only by owner";
+    public final static String COMMENT_CENSORED = "This comment has been censored";
+    public final static String COMMENT_UNDER_CONTROL = "This comment is waiting for moderator decision";
 
 
 }

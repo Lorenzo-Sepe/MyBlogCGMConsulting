@@ -61,6 +61,8 @@ spring-doc:
     # http://localhost:8081/api/swagger-ui/index.html
     path: /swagger-ui/index.html
     tags-sorter: alpha
+    display-request-duration: true
+
 
 # LOGGING
 logging:
