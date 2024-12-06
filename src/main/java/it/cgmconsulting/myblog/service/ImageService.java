@@ -112,13 +112,13 @@ public class ImageService {
         }
     }
 
-    private boolean checkSize(MultipartFile file, long size){
+    protected boolean checkSize(MultipartFile file, long size){
         if(file.getSize() > size || file.isEmpty())
             throw new BadRequestException(Msg.FILE_TOO_LARGE);
         return true;
     }
 
-    private BufferedImage fromMultipartFileToBufferedImage(MultipartFile file){
+    protected BufferedImage fromMultipartFileToBufferedImage(MultipartFile file){
         BufferedImage bf = null;
         try{
             bf = ImageIO.read(file.getInputStream());
@@ -128,7 +128,7 @@ public class ImageService {
         }
     }
 
-    private boolean checkDimension(MultipartFile file, int width, int height){
+    protected boolean checkDimension(MultipartFile file, int width, int height){
         BufferedImage bf = fromMultipartFileToBufferedImage(file);
         if(bf == null)
             throw new BadRequestException(Msg.FILE_NOT_VALID_IMAGE);
@@ -140,7 +140,7 @@ public class ImageService {
 
 
 
-    private boolean checkExtension(MultipartFile file, String[] extensions) throws IOException {
+    protected boolean checkExtension(MultipartFile file, String[] extensions) throws IOException {
         if(file != null){
             if(!Objects.requireNonNull(file.getOriginalFilename()).contains("."))
                 throw new BadRequestException(Msg.FILE_EXTENSION_MISSING);

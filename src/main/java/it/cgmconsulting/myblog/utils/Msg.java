@@ -56,6 +56,7 @@ public class Msg {
     public final static String COMMENT_UNAUTHORIZED_ACCESS = "The comment can modified only by owner";
     public final static String COMMENT_CENSORED = "This comment has been censored";
     public final static String COMMENT_UNDER_CONTROL = "This comment is waiting for moderator decision";
+    public final static String REACTION_SAME_COMMENT_AUTHOR = "You cannot add a reaction to your own comment";
 
 
 }

@@ -19,7 +19,7 @@ public class MadeByYou extends CreationUpdate {
     @Column(length = 100)
     private String description;
 
-    private boolean censored;
+    private boolean censored; // di default false
 
     @ManyToOne
     @JoinColumn(nullable = false)

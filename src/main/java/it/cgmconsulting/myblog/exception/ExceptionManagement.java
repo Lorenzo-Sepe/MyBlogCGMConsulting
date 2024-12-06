@@ -16,6 +16,11 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ExceptionManagement {
 
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<String> illegalArgumentExceptionManagement(IllegalArgumentException ex){
+        return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler({ConflictException.class})
     public ResponseEntity<String> conflictExceptionManagement(ConflictException ex){
         return new ResponseEntity<String>(ex.getMessage(), HttpStatus.CONFLICT);

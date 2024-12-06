@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import it.cgmconsulting.myblog.payload.request.PostRequest;
 import it.cgmconsulting.myblog.payload.response.PostBoxResponse;
 import it.cgmconsulting.myblog.payload.response.PostResponse;
+import it.cgmconsulting.myblog.payload.response.PreferredPostsResponse;
 import it.cgmconsulting.myblog.service.ImageService;
 import it.cgmconsulting.myblog.service.PostService;
 import jakarta.validation.Valid;
@@ -13,6 +14,7 @@ import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -89,7 +91,7 @@ public class PostControllerV1 {
         return ResponseEntity.ok(postService.reassignPost(oldAuthorId, newAuthorId, postId));
     }
 
-    @PatchMapping("/v1/posts/{postId}/image")
+    @PatchMapping(value="/v1/posts/{postId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('AUTHOR')")
     @Operation(summary = "Add image to post", description = "Upload an image inside the post", tags = {"Post"})
     public ResponseEntity<PostResponse> addPostImage(@AuthenticationPrincipal UserDetails userDetails,
@@ -193,6 +195,16 @@ public class PostControllerV1 {
     public ResponseEntity<String> addOrRemovePreferredPost(@AuthenticationPrincipal UserDetails userDetails,
                                                    @PathVariable int postId){
         return ResponseEntity.ok(postService.addPreferredPost(userDetails, postId));
+    }
+
+    @GetMapping("/v1/posts/preferred")
+    //@PreAuthorize("hasAuthority('MEMBER')")
+    @Operation(summary = "GET PREFERRED POSTS",
+            description = "Get preferred posts",
+            tags = {"Post"})
+    public ResponseEntity<List<PreferredPostsResponse>> getPreferredPosts(
+            @AuthenticationPrincipal UserDetails userDetails){
+        return ResponseEntity.ok(postService.getPreferredPosts(userDetails));
     }
 
 }

@@ -10,6 +10,7 @@ import it.cgmconsulting.myblog.exception.UnauthorizedException;
 import it.cgmconsulting.myblog.payload.request.PostRequest;
 import it.cgmconsulting.myblog.payload.response.PostBoxResponse;
 import it.cgmconsulting.myblog.payload.response.PostResponse;
+import it.cgmconsulting.myblog.payload.response.PreferredPostsResponse;
 import it.cgmconsulting.myblog.repository.PostRepository;
 import it.cgmconsulting.myblog.repository.UserRepository;
 import it.cgmconsulting.myblog.utils.Msg;
@@ -183,5 +184,10 @@ public class PostService {
             user.getPreferredPosts().add(post);
             return Msg.BOOKMARK_ADD;
         }
+    }
+
+    public List<PreferredPostsResponse> getPreferredPosts(UserDetails userDetails) {
+        List<PreferredPostsResponse> list = postRepository.getPreferredPosts(((User)userDetails).getId());
+        return list;
     }
 }

@@ -3,6 +3,7 @@ package it.cgmconsulting.myblog.repository;
 import it.cgmconsulting.myblog.entity.Post;
 import it.cgmconsulting.myblog.payload.response.PostBoxResponse;
 import it.cgmconsulting.myblog.payload.response.PostResponse;
+import it.cgmconsulting.myblog.payload.response.PreferredPostsResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -129,4 +130,13 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
                     "WHERE p.publishedAt IS NOT NULL AND p.publishedAt <= :now " +
                     "AND p.title LIKE :keyword") // ... AND title LIKE '%pasta%' ...
     Page<PostBoxResponse> getPaginatedPostsByKeyWord(Pageable pageable, LocalDate now, String imagePath, String keyword);
+
+    @Query(value="SELECT new it.cgmconsulting.myblog.payload.response.PreferredPostsResponse(" +
+            "p.id, " +
+            "p.title" +
+            ") FROM User u " +
+            "INNER JOIN u.preferredPosts p " +
+            "WHERE u.id = :userId " +
+            "ORDER BY p.title")
+    List<PreferredPostsResponse> getPreferredPosts(int userId);
 }

@@ -1,0 +1,2 @@
+CREATE OR REPLACE VIEW vw_count_reaction_by_comment AS SELECT cr.comment_id, r.reaction_name, COUNT(cr.reaction_id) AS tot FROM comment_reaction cr INNER JOIN reaction r ON r.id=cr.reaction_id WHERE r.visible = 1 GROUP BY cr.reaction_id, cr.comment_id ORDER BY cr.comment_id;
+CREATE OR REPLACE VIEW vw_show_users_by_comment_reaction AS SELECT u.username, cr.comment_id, r.reaction_name FROM comment_reaction cr INNER JOIN _user u ON u.id = cr.user_id INNER JOIN reaction r ON r.id = cr.reaction_id WHERE r.visible = 1 ORDER BY cr.comment_id;

@@ -17,10 +17,6 @@ public class CommentReactionId implements Serializable {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Reaction reaction;
-
-    @ManyToOne
-    @JoinColumn(nullable = false)
     private User user;
 
 }

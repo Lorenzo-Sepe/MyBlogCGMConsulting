@@ -37,7 +37,7 @@ spring:
     defer-datasource-initialization: true
 
   # all'avvio dell'applicazione viene eseguito data.sql presente in resource
-  sql.init.mode: never
+  sql.init.mode: always
 
   mail:
     # host: smtp.gmail.com
@@ -96,6 +96,13 @@ application:
       height: 200
       extensions: image/jpg,image/jpeg,image/webp
       imagePath: /Users/Public/myblog/post/images/
+    madeByYou:
+      # 20Kb
+      size: 20480
+      width: 200
+      height: 200
+      extensions: image/jpg,image/jpeg,image/webp
+      imagePath: /Users/Public/myblog/post/made_by_you/
 
 
 
