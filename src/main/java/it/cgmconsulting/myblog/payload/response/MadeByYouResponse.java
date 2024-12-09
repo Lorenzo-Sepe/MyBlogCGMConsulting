@@ -14,10 +14,10 @@ public class MadeByYouResponse {
     private String description;
     private String username;
 
-    public static MadeByYouResponse fromEntityToDto(MadeByYou madeByYou){
+    public static MadeByYouResponse fromEntityToDto(MadeByYou madeByYou, String path){
         return MadeByYouResponse.builder()
                 .id(madeByYou.getId())
-                .image(madeByYou.getImage())
+                .image(path+madeByYou.getImage())
                 .description(madeByYou.getDescription())
                 .username(madeByYou.getUser().getUsername())
                 .build();

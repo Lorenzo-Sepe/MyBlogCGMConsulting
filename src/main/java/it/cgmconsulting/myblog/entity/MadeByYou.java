@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "post_id" }) })
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class MadeByYou extends CreationUpdate {
 

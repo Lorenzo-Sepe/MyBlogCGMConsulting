@@ -58,5 +58,11 @@ public class Msg {
     public final static String COMMENT_UNDER_CONTROL = "This comment is waiting for moderator decision";
     public final static String REACTION_SAME_COMMENT_AUTHOR = "You cannot add a reaction to your own comment";
 
+    public final static String MADE_BY_YOU_EXISTS = "You already uploaded your artifact.";
+    public final static String MADE_BY_YOU_CENSORED = "This artifact has been censored";
+    public final static String MADE_BY_YOU_UNDER_CONTROL = "This artifact is waiting for moderator decision";
+    public final static String MADE_BY_YOU_UNAUTHORIZED_ACCESS = "The artifact can modified only by owner";
+    public final static String MADE_BY_YOU_DELETE_OK = "Your artifact has been removed";
+
 
 }
