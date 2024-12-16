@@ -5,6 +5,9 @@ import it.cgmconsulting.myblog.entity.enumeration.ReportStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Report extends CreationUpdate {
@@ -20,8 +23,6 @@ public class Report extends CreationUpdate {
     @ManyToOne
     private MadeByYou madeByYou;
 
-    private int counter; // contatore di segnalazioni
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 18)
     private ReportStatus status;
@@ -33,5 +34,11 @@ public class Report extends CreationUpdate {
     })
     private ReportReason reportReason;
 
+    @ManyToMany
+    @JoinTable(name = "reporter_users",
+            joinColumns = @JoinColumn(name = "report_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> reporters = new HashSet<>();
 
 }

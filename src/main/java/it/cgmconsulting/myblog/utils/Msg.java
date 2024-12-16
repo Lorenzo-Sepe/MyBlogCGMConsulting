@@ -74,5 +74,11 @@ public class Msg {
     public final static String REPORT_CREATED = "Your report has been send";
     public final static String REPORT_DOUBLE_PARAMETERS = "Either comment and madeByou ids found";
     public final static String REPORT_NO_PARAMETERS = "No comment or madeByYou ids found";
+    public final static String REPORT_INVALID_REPORTER = "You cannot report yourself";
+    public final static String REPORT_ALREDY_REPORTED = "You already report this";
+    public final static String REPORT_UNMODIFIABLE = "You cannot change the status of this report because it was closed";
+    public final static String REPORT_COME_BACK_NOT_ALLOWED = "This report cannot come back in the previous status";
+    public final static String REPORT_NOT_CLOSEABLE = "You cannot close directly this report";
+    public final static String REPORT_SAME_STATUS = "The old status equals to the new status";
 
 }
