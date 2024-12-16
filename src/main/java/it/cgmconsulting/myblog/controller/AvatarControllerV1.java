@@ -33,7 +33,7 @@ public class AvatarControllerV1 {
     @Value("${application.image.avatar.height}")
     private int height;
     @Value("${application.image.avatar.extensions}")
-    private String[]  extensions;
+    private String[] extensions;
 
 
 

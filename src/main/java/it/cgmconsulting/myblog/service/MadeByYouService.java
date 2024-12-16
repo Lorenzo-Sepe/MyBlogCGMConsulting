@@ -14,6 +14,7 @@ import it.cgmconsulting.myblog.repository.ReportRepository;
 import it.cgmconsulting.myblog.utils.Msg;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,6 +33,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MadeByYouService {
 
     private final MadeByYouRepository madeByYouRepository;
@@ -104,6 +106,7 @@ public class MadeByYouService {
             Path p = Paths.get(imagePath + madeByYou.getImage());
             Files.delete(p);
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw new ConflictException(Msg.FILE_ERROR_DELETE);
         }
 

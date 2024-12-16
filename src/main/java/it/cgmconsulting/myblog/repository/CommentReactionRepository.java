@@ -12,7 +12,6 @@ import java.util.List;
 public interface CommentReactionRepository extends JpaRepository<CommentReaction, CommentReactionId> {
 
 
-
     @Query(value="SELECT * FROM vw_count_reaction_by_comment", nativeQuery = true)
     List<CommentReactionResponseInterface> getReactions();
 

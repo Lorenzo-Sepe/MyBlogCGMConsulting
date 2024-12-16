@@ -49,20 +49,30 @@ public class Msg {
     public final static String POSTS_REASSIGNEMENT = "All posts have been reassigned";
     public final static String POST_REASSIGNEMENT = "The post has been reassigned";
 
+    // -------------------- PREFERRED POST
     public final static String BOOKMARK_ADD = "The post has been bookmarked";
     public final static String BOOKMARK_REMOVE = "The post has been removed from bookmarks";
 
+    // -------------------- COMMENT
     public final static String COMMENT_500 = "Something went wrong writing the comment";
     public final static String COMMENT_UNAUTHORIZED_ACCESS = "The comment can modified only by owner";
     public final static String COMMENT_CENSORED = "This comment has been censored";
     public final static String COMMENT_UNDER_CONTROL = "This comment is waiting for moderator decision";
     public final static String REACTION_SAME_COMMENT_AUTHOR = "You cannot add a reaction to your own comment";
 
+    // -------------------- MADE BY YOU
     public final static String MADE_BY_YOU_EXISTS = "You already uploaded your artifact.";
     public final static String MADE_BY_YOU_CENSORED = "This artifact has been censored";
     public final static String MADE_BY_YOU_UNDER_CONTROL = "This artifact is waiting for moderator decision";
     public final static String MADE_BY_YOU_UNAUTHORIZED_ACCESS = "The artifact can modified only by owner";
     public final static String MADE_BY_YOU_DELETE_OK = "Your artifact has been removed";
 
+    // -------------------- REPORT REASON
+    public final static String REPORT_REASON_VALID_ALREADY_PRESENT = "A reason with this name is already present";
+
+    // -------------------- REPORT
+    public final static String REPORT_CREATED = "Your report has been send";
+    public final static String REPORT_DOUBLE_PARAMETERS = "Either comment and madeByou ids found";
+    public final static String REPORT_NO_PARAMETERS = "No comment or madeByYou ids found";
 
 }

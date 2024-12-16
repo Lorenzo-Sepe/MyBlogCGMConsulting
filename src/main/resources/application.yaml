@@ -71,7 +71,7 @@ logging:
     org:
       springframework:
         boot: info
-        security: debug
+        security: info
     org.hibernate.orm.jdbc.bind: trace
 
 # CUSTOM PROPERTIES

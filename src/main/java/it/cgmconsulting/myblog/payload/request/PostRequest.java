@@ -13,6 +13,4 @@ public class PostRequest {
     private String overview;
     @NotBlank @Size(max = 10000, min = 200)
     private String content;
-    @Size(max = 255)
-    private String image;
 }

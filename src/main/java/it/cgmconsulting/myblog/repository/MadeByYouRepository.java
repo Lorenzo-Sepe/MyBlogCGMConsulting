@@ -21,4 +21,7 @@ public interface MadeByYouRepository extends JpaRepository<MadeByYou, Integer> {
             "FROM MadeByYou m " +
             "WHERE m.post.id = :postId AND m.censored = false")
     Page<MadeByYouResponse> getArtifacts(int postId, Pageable pageable, String imagePath);
+
+    @Query(value="SELECT m FROM MadeByYou m where m.id = :id and m.censored = false")
+    MadeByYou getValidMadeByYou(int id);
 }
