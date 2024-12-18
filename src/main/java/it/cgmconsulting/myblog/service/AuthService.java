@@ -14,18 +14,14 @@ import it.cgmconsulting.myblog.repository.AuthorityRepository;
 import it.cgmconsulting.myblog.repository.UserRepository;
 import it.cgmconsulting.myblog.utils.GenericMail;
 import it.cgmconsulting.myblog.utils.Msg;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -69,6 +65,7 @@ public class AuthService {
         return Msg.USER_SIGNUP_SECOND_STEP;
     }
 
+    @Transactional
     public JwtAuthenticationResponse signin(SignInRequest request) {
         User user = userRepository.findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username or email", request.usernameOrEmail()));
@@ -77,7 +74,14 @@ public class AuthService {
                     .orElseThrow(() -> new ResourceNotFoundException("Authority", "defaultAuthority", true));
             if (authority.getAuthorityName().name().equals(user.getAuthority().getAuthorityName().name()))
                 throw new DisabledException("Please check your email to activate your account");
-            throw new DisabledException("You are banned");
+            else {
+                // se il ban è scaduto riabilito l'utente
+                if(LocalDateTime.now().isAfter(user.getBannedUntil())) {
+                    user.setEnabled(true);
+                    user.setBannedUntil(null);
+                } else
+                    throw new DisabledException("You are banned until " + user.getBannedUntil().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            }
         }
         if(!passwordEncoder.matches(request.password(), user.getPassword()))
             throw new BadCredentialsException("Bad credentials");

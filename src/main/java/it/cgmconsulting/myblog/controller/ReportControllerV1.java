@@ -54,9 +54,10 @@ public class ReportControllerV1 {
             @RequestParam(defaultValue = "0") int pageNumber, // numero di pagina da cui partire; 0 è la prima pagina
             @RequestParam(defaultValue = "5") int pageSize, // numero di elementi per pagina
             @RequestParam(defaultValue = "status") String sortBy, // la colonna presa in considerazione per l'ordinamento
-            @RequestParam(defaultValue = "DESC") String direction // ASC o DESC, ordinamento ascendente o discendente
+            @RequestParam(defaultValue = "DESC") String direction, // ASC o DESC, ordinamento ascendente o discendente
+            @RequestParam(defaultValue = "OPEN") String status
     ){
-        return ResponseEntity.ok(reportService.getReports(pageNumber, pageSize, sortBy, direction));
+        return ResponseEntity.ok(reportService.getReports(pageNumber, pageSize, sortBy, direction, status));
     }
 
     @PatchMapping("/v1/reports/{reportId}")
@@ -65,7 +66,7 @@ public class ReportControllerV1 {
             description = "Change report status. Rules:\n" +
                     "1) The change of status is unidirectional: OPEN -> IN_PROGRESS -> CLOSED_\n" +
                     "2) A closed report cannot change status, is unmodifiable\n" +
-                    "3) The CLOSED_WITH_BAN status implies user ban and comment /made by you censorship" ,
+                    "3) The CLOSED_WITH_BAN status implies user ban and comment/made by you censorship" ,
             tags = {"Report"})
     public ResponseEntity<ReportResponse> updateReport(
             @PathVariable int reportId,

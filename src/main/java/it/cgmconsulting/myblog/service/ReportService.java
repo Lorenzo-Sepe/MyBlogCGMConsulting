@@ -7,6 +7,7 @@ import it.cgmconsulting.myblog.exception.ConflictException;
 import it.cgmconsulting.myblog.exception.ResourceNotFoundException;
 import it.cgmconsulting.myblog.payload.request.ReportRequest;
 import it.cgmconsulting.myblog.payload.response.ReportResponse;
+import it.cgmconsulting.myblog.payload.response.ReportResponseImpl;
 import it.cgmconsulting.myblog.repository.CommentRepository;
 import it.cgmconsulting.myblog.repository.MadeByYouRepository;
 import it.cgmconsulting.myblog.repository.ReportReasonRepository;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -65,9 +67,10 @@ public class ReportService {
         }
     }
 
-    public List<ReportResponse> getReports(int pageNumber, int pageSize, String sortBy, String direction) {
+    public List<ReportResponse> getReports(int pageNumber, int pageSize, String sortBy, String direction, String status) {
+        ReportStatus x = ReportStatus.valueOf(status);
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.Direction.valueOf(direction.toUpperCase()), sortBy);
-        Page<ReportResponse> list = reportRepository.getReports(pageable);
+        Page<ReportResponse> list = reportRepository.getReports(pageable, status);
         return list.getContent();
     }
 
@@ -86,7 +89,7 @@ public class ReportService {
         if(reportStatus.equals(ReportStatus.valueOf(status)))
             throw new BadRequestException(Msg.REPORT_SAME_STATUS);
 
-        // Sul db è il stato OPEN quindi può diventare solo IN PROGRESS
+        // Sul db la segnalazione è in stato OPEN quindi può diventare solo IN_PROGRESS
         if(reportStatus.equals(ReportStatus.OPEN))
             if(ReportStatus.valueOf(status).name().startsWith("CLOSED_"))
                 throw new BadRequestException(Msg.REPORT_NOT_CLOSEABLE);
@@ -94,7 +97,7 @@ public class ReportService {
                 report.setStatus(ReportStatus.valueOf(status));
             }
 
-        // Sul db è il stato IN PROGRESS quindi posso solo chiuderlo
+        // Sul db la segnalazione è in stato IN_PROGRESS e quindi posso solo chiuderlo
         if(reportStatus.equals(ReportStatus.IN_PROGRESS))
             if(ReportStatus.valueOf(status).equals(ReportStatus.OPEN))
                 throw new BadRequestException(Msg.REPORT_COME_BACK_NOT_ALLOWED);
@@ -108,19 +111,20 @@ public class ReportService {
                     ReportReason reportReason = reportReasonRepository.getValidReason(reason)
                             .orElseThrow(()-> new ResourceNotFoundException("Reason", "name", reason));
                     report.setReportReason(reportReason);
+                    LocalDateTime bannedUntil = LocalDateTime.now().plusDays(reportReason.getSeverity());
                     // disabilitare l'utente e censurare il commento o il made by you in oggetto
                     if(report.getComment() != null) {
                         report.getComment().getUser().setEnabled(false);
                         report.getComment().setCensored(true);
-                    }
-                    else {
+                        report.getComment().getUser().setBannedUntil(bannedUntil);
+                    } else {
                         report.getMadeByYou().getUser().setEnabled(false);
                         report.getMadeByYou().setCensored(true);
+                        report.getMadeByYou().getUser().setBannedUntil(bannedUntil);
                     }
-
+                    report.setStatus(ReportStatus.CLOSED_WITH_BAN);
                 }
             }
-/* todo */
-        return null;
+        return ReportResponseImpl.fromEntityToDto(report);
     }
 }

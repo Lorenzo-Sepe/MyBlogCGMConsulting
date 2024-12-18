@@ -37,7 +37,7 @@ public class ExceptionManagement {
     }
 
     @ExceptionHandler({AccessDeniedException.class})
-    public ResponseEntity<String> disabledExceptionManagement(AccessDeniedException ex){
+    public ResponseEntity<String> accessDeniedExceptionManagement(AccessDeniedException ex){
         return new ResponseEntity<String>(Msg.ACCESS_DENIED, HttpStatus.FORBIDDEN);
     }
 

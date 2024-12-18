@@ -35,7 +35,8 @@ public interface ReportRepository extends JpaRepository<Report, Integer> {
             "LEFT JOIN comment c ON c.id=r.comment_id " +
             "LEFT JOIN made_by_you m ON m.id = r.made_by_you_id " +
             "LEFT JOIN _user u1 ON u1.id=c.user_id " +
-            "LEFT JOIN _user u2 ON u2.id=m.user_id", nativeQuery = true)
-    Page<ReportResponse> getReports(Pageable pageable);
+            "LEFT JOIN _user u2 ON u2.id=m.user_id " +
+            "WHERE r.status = :status", nativeQuery = true)
+    Page<ReportResponse> getReports(Pageable pageable, String status);
 
 }
