@@ -81,4 +81,8 @@ public class Msg {
     public final static String REPORT_NOT_CLOSEABLE = "You cannot close directly this report";
     public final static String REPORT_SAME_STATUS = "The old status equals to the new status";
 
+    // -------------------- PDF
+    public final static String PDF_FATAL_ERROR = "Error creating pdf from post";
+
+
 }

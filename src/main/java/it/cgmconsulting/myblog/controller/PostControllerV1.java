@@ -43,7 +43,7 @@ public class PostControllerV1 {
     @Value("${application.image.post.extensions}")
     private String[]  extensions;
     @Value("${application.image.post.imagePath}")
-    private String  imagePath;
+    private String imagePath;
 
     private final PostService postService;
     private final ImageService imageService;

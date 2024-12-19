@@ -30,6 +30,7 @@
 		<java.version>17</java.version>
 		<jjwt.version>0.11.5</jjwt.version>
 		<springdoc>2.5.0</springdoc>
+		<itext.version>9.0.0</itext.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -102,6 +103,14 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>${springdoc}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itext-core</artifactId>
+			<version>${itext.version}</version>
+			<type>pom</type>
+		</dependency>
+
 	</dependencies>
 
 
