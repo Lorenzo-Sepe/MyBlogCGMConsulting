@@ -33,7 +33,8 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 ),
                 @Server(
                         description = "PROD ENV",
-                        url = "https://myblog.cgmconsulting.it"
+                        url = "http://93.51.15.74:${server.port}${server.servlet.context-path}"
+                        //url = "https://myblog.cgmconsulting.it"
                 )
         },
         security = {

@@ -16,6 +16,9 @@ import it.cgmconsulting.myblog.repository.UserRepository;
 import it.cgmconsulting.myblog.utils.Msg;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +35,7 @@ import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
 
     private final PostRepository postRepository;
@@ -84,6 +88,7 @@ public class PostService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "posts-home-page", allEntries = true)
     public PostResponse publishPost(int id, LocalDate publishedAt, String imagePath) {
         Post post = postRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Post", "id", id));
@@ -137,7 +142,9 @@ public class PostService {
         else return new ArrayList<PostBoxResponse>();
     }
 
+    @Cacheable("posts-home-page")
     public List<PostBoxResponse> getLatestPostHomePage(int pageNumber, int pageSize, String sortBy, String direction, String imagePath) {
+        log.info("@@@@@@@@@@@@@@ Sono nel metodo getLatestPostHomePage");
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.Direction.valueOf(direction.toUpperCase()), sortBy);
         Page<PostBoxResponse> list = postRepository.getLatestPostHomePage(pageable, LocalDate.now(), imagePath);
         if(list.hasContent())

@@ -31,6 +31,7 @@
 		<jjwt.version>0.11.5</jjwt.version>
 		<springdoc>2.5.0</springdoc>
 		<itext.version>9.0.0</itext.version>
+		<caffeine.version>3.1.8</caffeine.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -109,6 +110,20 @@
 			<artifactId>itext-core</artifactId>
 			<version>${itext.version}</version>
 			<type>pom</type>
+		</dependency>
+
+		<!-- JSON -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20240303</version>
+		</dependency>
+
+		<!-- CAFFEINE CACHE -->
+		<dependency>
+			<groupId>com.github.ben-manes.caffeine</groupId>
+			<artifactId>caffeine</artifactId>
+			<version>${caffeine.version}</version>
 		</dependency>
 
 	</dependencies>

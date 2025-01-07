@@ -15,6 +15,8 @@ import it.cgmconsulting.myblog.repository.ReportRepository;
 import it.cgmconsulting.myblog.utils.Msg;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +29,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor @Slf4j
 public class CommentService {
 
     private final CommentRepository commentRepository;
@@ -57,6 +59,7 @@ public class CommentService {
 
     public List<CommentResponse> getComments(int postId, int pageNumber, int pageSize, String sortBy, String direction ) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.Direction.valueOf(direction.toUpperCase()), sortBy);
+        log.info("*d**d*da*f*f*wq*f*qw*f*qw*f**e*f*2f**2er**3f**234*f23*4*f*34");
         return commentRepository.getComments(postId, pageable).getContent();
     }
 

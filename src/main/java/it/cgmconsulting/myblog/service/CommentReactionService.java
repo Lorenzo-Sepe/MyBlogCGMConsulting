@@ -12,6 +12,7 @@ import it.cgmconsulting.myblog.repository.ReactionRepository;
 import it.cgmconsulting.myblog.utils.Msg;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 

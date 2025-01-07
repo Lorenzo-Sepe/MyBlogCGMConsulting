@@ -73,6 +73,17 @@ logging:
         boot: info
         security: info
     org.hibernate.orm.jdbc.bind: trace
+  file.name: /Users/Public/myblog/log/myblog_log.txt
+  # Rolling policies
+  logback:
+    rolling-policy:
+      max-history: 7
+      max-file-size: 10Mb
+      file-name-pattern: /Users/Public/myblog/log/%d{yyyy-MM}/myblog.%d{yyyy-MM-dd}.%i.txt
+      total-size-cap: 1GB
+
+
+
 
 # CUSTOM PROPERTIES
 application:
