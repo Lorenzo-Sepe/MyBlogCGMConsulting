@@ -144,7 +144,7 @@ public class PostService {
 
     @Cacheable("posts-home-page")
     public List<PostBoxResponse> getLatestPostHomePage(int pageNumber, int pageSize, String sortBy, String direction, String imagePath) {
-        log.info("@@@@@@@@@@@@@@ Sono nel metodo getLatestPostHomePage");
+        //log.info("@@@@@@@@@@@@@@ Sono nel metodo getLatestPostHomePage");
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.Direction.valueOf(direction.toUpperCase()), sortBy);
         Page<PostBoxResponse> list = postRepository.getLatestPostHomePage(pageable, LocalDate.now(), imagePath);
         if(list.hasContent())
