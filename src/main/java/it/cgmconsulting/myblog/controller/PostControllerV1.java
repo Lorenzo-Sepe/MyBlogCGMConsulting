@@ -41,7 +41,7 @@ public class PostControllerV1 {
     @Value("${application.image.post.height}")
     private int height;
     @Value("${application.image.post.extensions}")
-    private String[]  extensions;
+    private String[] extensions;
     @Value("${application.image.post.imagePath}")
     private String imagePath;
 
